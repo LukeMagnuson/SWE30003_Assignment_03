@@ -6,6 +6,14 @@ export type ProductOptions = {
   imageUrl?: string;
 };
 
+/** To add possibly:
+ *   Explicit checkAvailability(requested: number): boolean (non-throwing check).
+ *   calculateGST(): number — a single method returning GST in cents (if other code needs GST separately).
+ *   updatePrice(newPriceCents): void — wrapper method that records price changes to a price history list (if required).
+ *   Add Category enum or controlled vocabulary if categories must be validated against a set.
+ *   Unit tests for getDetails(), calculateGST(), checkAvailability, and imageUrl validation (the tests I supplied earlier already cover many cases, add more as needed).
+ */
+
 /**
  * Product domain class.
  * - price stored as integer cents to avoid floating-point issues.
@@ -71,6 +79,9 @@ export class Product {
     this._priceCents = value;
   }
 
+  /**
+   * Get available quantity and check if > 0 with isAvailable()
+   */
   get quantityAvailable(): number {
     return this._quantityAvailable;
   }
