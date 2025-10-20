@@ -3,6 +3,8 @@
     <nav>
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/about">About</RouterLink>
+      <RouterLink to="/shop">Shop</RouterLink>
+      <RouterLink to="/test">Test</RouterLink>
     </nav>
   </header>
 </template>

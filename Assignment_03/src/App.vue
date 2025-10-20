@@ -1,16 +1,18 @@
+<script setup lang="ts">
+import SiteFooter from './components/SiteFooter.vue';
+import SiteHeader from './components/SiteHeader.vue';
+
+</script>
+
 <template>
   <div class="app-container">
-    <header>
-      <h1>My Site</h1>
-    </header>
+    <SiteHeader />
 
     <main>
       <RouterView />
     </main>
 
-    <footer>
-      <p>© 2025 My Website</p>
-    </footer>
+    <SiteFooter />
   </div>
 </template>
 

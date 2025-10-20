@@ -4,7 +4,7 @@ Step 0:
 download the repo.
 
 Step 1:
-download 
+download and install Node.js
 
 Step 2:
 open the repo in vsCode, or preferred editor
