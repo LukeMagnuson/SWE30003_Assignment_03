@@ -1,14 +1,25 @@
 <template>
-  <div>
+  <div class="shop-view">
     <h1>Shop</h1>
 
-    <input v-model="searchTerm" placeholder="Search products..." />
+    <input v-model="searchTerm" placeholder="Search products..." class="search" />
 
-    <ul>
-      <li v-for="shopItem in paginatedShopItems" :key="shopItem.productId">
-        <u>{{ shopItem.name }}</u>
-        — stock: <b>{{ shopItem.quantityAvailable }}</b>
-        — price: ${{ (shopItem.priceCents / 100).toFixed(2) }}
+    <ul class="product-list">
+      <li v-for="shopItem in paginatedShopItems" :key="shopItem.productId" class="product-item">
+        <img
+          class="product-image"
+          :src="computeImageSrc(shopItem)"
+          :alt="shopItem.name"
+          @error="onImageError($event)"
+        />
+        <div class="product-info">
+          <div class="product-name">{{ shopItem.name }}</div>
+          <div class="product-desc">{{ shopItem.description }}</div>
+          <div class="product-meta">
+            <span class="stock">Stock: <b>{{ shopItem.quantityAvailable }}</b></span>
+            <span class="price">Price: ${{ (shopItem.priceCents / 100).toFixed(2) }}</span>
+          </div>
+        </div>
       </li>
     </ul>
 
@@ -21,7 +32,7 @@
 </template>
 
 <script>
-import ProductCatalogue from '../models/ProductCatalogue';
+import ProductCatalogue from '../models/product-catalogue';
 
 export default {
   data() {
@@ -29,13 +40,14 @@ export default {
       catalogue: null,
       searchTerm: '',
       currentPage: 1,
-      itemsPerPage: 8
+      itemsPerPage: 8,
+      // placeholder - keep a fallback image path that exists in public/images/
+      placeholder: '/images/placeholder.png'
     };
   },
   computed: {
     filteredShop() {
       if (!this.catalogue) return [];
-      // ProductCatalogue.searchProducts returns Product[] (objects)
       return this.catalogue.searchProducts(this.searchTerm);
     },
     totalPages() {
@@ -48,19 +60,43 @@ export default {
   },
   methods: {
     nextPage() { if (this.currentPage < this.totalPages) this.currentPage++; },
-    prevPage() { if (this.currentPage > 1) this.currentPage--; }
+    prevPage() { if (this.currentPage > 1) this.currentPage--; },
+
+    // compute an image src that works for:
+    // - absolute URLs (http(s)://...)
+    // - root-relative paths starting with '/'
+    // - plain filenames or relative paths: prefix with '/images/' (helpful if DTO has just filename)
+    computeImageSrc(product) {
+      const url = product.imageUrl || '';
+      const trimmed = String(url).trim();
+      if (!trimmed) return this.placeholder;
+
+      // absolute
+      if (/^https?:\/\//i.test(trimmed)) return trimmed;
+
+      // root relative already (e.g. /images/...)
+      if (trimmed.startsWith('/')) return trimmed;
+
+      // assume it's a filename or relative path -> serve from public/images
+      return `/images/${trimmed}`;
+    },
+
+    // on image load error: set fallback placeholder
+    onImageError(e) {
+      if (e && e.target) {
+        e.target.onerror = null;
+        e.target.src = this.placeholder;
+      }
+    }
   },
   watch: {
     searchTerm() { this.currentPage = 1; }
   },
   async mounted() {
-    // Primary API URL (json-server)
     const apiUrl = 'http://localhost:3000/products';
-    // Fallback local static JSON (if you have public/data/shop.json)
     const fallbackUrl = '/data/shop.json';
 
     try {
-      // Try loading from json-server first
       this.catalogue = await ProductCatalogue.loadFromUrl(apiUrl);
       console.info('Loaded product catalogue from API:', apiUrl);
     } catch (apiErr) {
@@ -70,7 +106,6 @@ export default {
         console.info('Loaded product catalogue from fallback JSON:', fallbackUrl);
       } catch (jsonErr) {
         console.error('Failed to load product data from API and fallback JSON', jsonErr);
-        // fallback to empty catalogue so UI still works
         this.catalogue = new ProductCatalogue([]);
       }
     }
@@ -79,8 +114,64 @@ export default {
 </script>
 
 <style scoped>
-/* small spacing so the list looks nicer */
-ul { padding-left: 0; list-style: none; }
-li { margin: 0.6rem 0; }
-.pagination { margin-top: 1rem; display:flex; gap:1rem; align-items:center; }
+.shop-view {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+.search {
+  display:block;
+  margin: 0 0 1rem 0;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+.product-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.product-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  align-items: flex-start;
+  background: #fff;
+}
+.product-image {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+  background: #f6f6f6;
+}
+.product-info {
+  flex: 1;
+}
+.product-name {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.product-desc {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+.product-meta {
+  display:flex;
+  gap:1rem;
+  font-size: 0.9rem;
+  color:#333;
+}
+.pagination {
+  margin-top: 1rem;
+  display:flex;
+  gap:1rem;
+  align-items:center;
+}
 </style>
