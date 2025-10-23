@@ -21,59 +21,44 @@
 </template>
 
 <script>
+import ProductCatalogue from '../models/product-catalogue';
+
 export default {
-  data () {
+  data() {
     return {
-      shopData: [],
+      catalogue: null,
       searchTerm: '',
       currentPage: 1,
       itemsPerPage: 5
-    }
+    };
   },
   computed: {
-    filteredShop () {
-      return this.shopData.filter(shopData =>
-        shopData.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      )
+    filteredShop() {
+      if (!this.catalogue) return [];
+      return this.catalogue.searchProducts(this.searchTerm);
     },
-    totalPages () {
-      return Math.ceil(this.filteredShop.length / this.itemsPerPage)
+    totalPages() {
+      return Math.max(1, Math.ceil(this.filteredShop.length / this.itemsPerPage));
     },
-    paginatedUsers () {
-      const start = (this.currentPage - 1) * this.itemsPerPage
-      return this.filteredShop.slice(start, start + this.itemsPerPage)
+    paginatedShopItems() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      return this.filteredShop.slice(start, start + this.itemsPerPage);
     }
   },
   methods: {
-    nextPage () {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++
-      }
-    },
-    prevPage () {
-      if (this.currentPage > 1) {
-        this.currentPage--
-      }
-    }
+    nextPage() { if (this.currentPage < this.totalPages) this.currentPage++; },
+    prevPage() { if (this.currentPage > 1) this.currentPage--; }
   },
   watch: {
-    searchTerm () {
-      this.currentPage = 1 // Reset to page 1 on search
-    }
+    searchTerm() { this.currentPage = 1; }
   },
-  mounted () {
-    fetch('data/shop.json')
-    // fetch('/auth/users.json')
-      .then(response =>
-      {
-        return response.json();
-    })
-      .then(data => {
-        this.shopData = data;
-      })
-      .catch(error => {
-        console.error('Error loading JSON:', error)
-      })
+  async mounted() {
+    try {
+      this.catalogue = await ProductCatalogue.loadFromUrl('/data/shop.json');
+    } catch (err) {
+      console.error('Failed to load catalogue', err);
+      this.catalogue = new ProductCatalogue([]);
+    }
   }
-}
+};
 </script>
