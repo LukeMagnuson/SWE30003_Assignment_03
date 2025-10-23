@@ -1,17 +1,17 @@
 <template>
   <div>
-    <h1>News List</h1>
-    <!-- Search input -->
-    <input v-model="searchTerm" placeholder="Search news..." />
+    <h1>Shop</h1>
+
+    <input v-model="searchTerm" placeholder="Search products..." />
 
     <ul>
-      <!-- Filtered user list -->
-      <li v-for="shopItem in paginatedUsers" :key="shopItem.id">
-        <u>{{shopItem.name}}</u> by <b>{{ shopItem.inventory_count }}</b>
+      <li v-for="shopItem in paginatedShopItems" :key="shopItem.productId">
+        <u>{{ shopItem.name }}</u>
+        — stock: <b>{{ shopItem.quantityAvailable }}</b>
+        — price: ${{ (shopItem.priceCents / 100).toFixed(2) }}
       </li>
     </ul>
 
-    <!-- Pagination controls -->
     <div class="pagination">
       <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
       Page {{ currentPage }} of {{ totalPages }}
@@ -29,12 +29,13 @@ export default {
       catalogue: null,
       searchTerm: '',
       currentPage: 1,
-      itemsPerPage: 5
+      itemsPerPage: 8
     };
   },
   computed: {
     filteredShop() {
       if (!this.catalogue) return [];
+      // ProductCatalogue.searchProducts returns Product[] (objects)
       return this.catalogue.searchProducts(this.searchTerm);
     },
     totalPages() {
@@ -53,12 +54,33 @@ export default {
     searchTerm() { this.currentPage = 1; }
   },
   async mounted() {
+    // Primary API URL (json-server)
+    const apiUrl = 'http://localhost:3000/products';
+    // Fallback local static JSON (if you have public/data/shop.json)
+    const fallbackUrl = '/data/shop.json';
+
     try {
-      this.catalogue = await ProductCatalogue.loadFromUrl('/data/shop.json');
-    } catch (err) {
-      console.error('Failed to load catalogue', err);
-      this.catalogue = new ProductCatalogue([]);
+      // Try loading from json-server first
+      this.catalogue = await ProductCatalogue.loadFromUrl(apiUrl);
+      console.info('Loaded product catalogue from API:', apiUrl);
+    } catch (apiErr) {
+      console.warn('Failed to load from API, falling back to static JSON:', apiErr);
+      try {
+        this.catalogue = await ProductCatalogue.loadFromUrl(fallbackUrl);
+        console.info('Loaded product catalogue from fallback JSON:', fallbackUrl);
+      } catch (jsonErr) {
+        console.error('Failed to load product data from API and fallback JSON', jsonErr);
+        // fallback to empty catalogue so UI still works
+        this.catalogue = new ProductCatalogue([]);
+      }
     }
   }
 };
 </script>
+
+<style scoped>
+/* small spacing so the list looks nicer */
+ul { padding-left: 0; list-style: none; }
+li { margin: 0.6rem 0; }
+.pagination { margin-top: 1rem; display:flex; gap:1rem; align-items:center; }
+</style>
