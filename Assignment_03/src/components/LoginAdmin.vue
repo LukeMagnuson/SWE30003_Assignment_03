@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import auth from '../models/authentication-service';
+import auth from '../models/AuthenticationService';
 
 const STORAGE_KEY = 'auth_token';
 

@@ -7,7 +7,7 @@ import SiteFooter from '../components/SiteFooter.vue';
 import ShopView from '../components/ShopView.vue';
 import LoginAdmin from '../components/LoginAdmin.vue';
 import AdminDashboard from '../components/AdminDashboard.vue';
-import auth from '../models/authentication-service';
+import auth from '../models/AuthenticationService';
 
 const routes = [
   { path: '/', component: HomePage },
