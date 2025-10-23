@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import ProductCatalogue from '../models/product-catalogue';
+import ProductCatalogue from '../models/ProductCatalogue';
 
 export default {
   data() {
@@ -72,7 +72,7 @@ export default {
       searchTerm: '',
       currentPage: 1,
       itemsPerPage: 8,
-      placeholder: '/images/placeholder.png',
+      placeholder: '/images/Supa_Team_4.jpg',
       adminMessage: '',
       addForm: {
         productId: '',

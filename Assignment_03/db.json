@@ -215,6 +215,21 @@
       "priceCents": 499,
       "inventory_count": 36,
       "imageUrl": "/images/pasta-sauce-500g.jpg"
+    },
+    {
+      "id": "SKU-025",
+      "productId": "SKU-024",
+      "name": "Deodorant 500mls",
+      "price": 4.99,
+      "inventory_count": 20,
+      "description": "Deodorant for underarms "
+    },
+    {
+      "id": "d750",
+      "productId": "SKU-026",
+      "name": "Hummus 1Kg",
+      "price": 7.99,
+      "inventory_count": 5
     }
   ]
 }
