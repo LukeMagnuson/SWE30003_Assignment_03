@@ -1,10 +1,10 @@
 <template>
   <header>
     <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-      <RouterLink to="/shop">Shop</RouterLink>
-      <RouterLink to="/test">Test</RouterLink>
+      <router-link to="/">Home</router-link>
+      <router-link to="/shop">Shop</router-link>
+      <router-link to="/about">About</router-link>
+      <router-link to="/login">Login</router-link>
     </nav>
   </header>
 </template>
