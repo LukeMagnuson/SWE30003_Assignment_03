@@ -223,13 +223,6 @@
       "price": 4.99,
       "inventory_count": 20,
       "description": "Deodorant for underarms "
-    },
-    {
-      "id": "d750",
-      "productId": "SKU-026",
-      "name": "Hummus 1Kg",
-      "price": 7.99,
-      "inventory_count": 5
     }
   ]
 }
