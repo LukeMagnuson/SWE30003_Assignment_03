@@ -42,7 +42,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 8,
       // placeholder - keep a fallback image path that exists in public/images/
-      placeholder: '/images/placeholder.png'
+      placeholder: '/images/Supa_Team_4.jpg'
     };
   },
   computed: {
