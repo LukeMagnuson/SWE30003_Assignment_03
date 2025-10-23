@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import ProductCatalogue from '../models/product-catalogue';
+import ProductCatalogue from '../models/ProductCatalogue';
 
 export default {
   data() {
