@@ -15,24 +15,13 @@ const routes = [
   { path: '/test', component: Test },
   { path: '/shop', component: ShopView },
   { path: '/login', component: LoginAdmin },
-  {
-    path: '/admin',
-    component: AdminDashboard,
-    beforeEnter: (to, from, next) => {
-      try {
-        const token = localStorage.getItem('auth_token');
-        if (!token) throw new Error('Not authenticated');
-        const user = auth.validateSession(token);
-        if (user && user.getRole && user.getRole() === 'Admin') {
-          next();
-        } else {
-          next('/login');
-        }
-      } catch (err) {
-        next('/login');
-      }
-    }
-  }
+  // mark admin route with a meta flag
+  { path: '/admin', component: AdminDashboard, meta: { requiresAdmin: true } }
 ];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+});
 
 export default router;
