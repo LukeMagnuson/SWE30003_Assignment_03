@@ -1,0 +1,220 @@
+{
+  "products": [
+    {
+      "productId": "SKU-001",
+      "name": "Fresh Milk 1L",
+      "description": "Full cream Australian milk, 1 litre carton.",
+      "category": "Dairy",
+      "priceCents": 249,
+      "inventory_count": 48,
+      "imageUrl": "/images/milk-1l.jpg"
+    },
+    {
+      "productId": "SKU-002",
+      "name": "Wholemeal Bread",
+      "description": "Freshly baked wholemeal loaf, 700g.",
+      "category": "Bakery",
+      "priceCents": 349,
+      "inventory_count": 30,
+      "imageUrl": "/images/bread-wholemeal.jpg"
+    },
+    {
+      "productId": "SKU-003",
+      "name": "Free Range Eggs (12)",
+      "description": "Dozen free-range eggs.",
+      "category": "Dairy",
+      "priceCents": 599,
+      "inventory_count": 22,
+      "imageUrl": "/images/eggs-12.jpg"
+    },
+    {
+      "productId": "SKU-004",
+      "name": "Ground Coffee 250g",
+      "description": "Medium roast ground coffee, 250g pack.",
+      "category": "Beverages",
+      "priceCents": 1299,
+      "inventory_count": 14,
+      "imageUrl": "/images/coffee-250g.jpg"
+    },
+    {
+      "productId": "SKU-005",
+      "name": "Granulated Sugar 1kg",
+      "description": "Refined granulated sugar, 1 kilogram.",
+      "category": "Pantry",
+      "priceCents": 399,
+      "inventory_count": 40,
+      "imageUrl": "/images/sugar-1kg.jpg"
+    },
+    {
+      "productId": "SKU-006",
+      "name": "Unsalted Butter 250g",
+      "description": "Creamy unsalted butter, 250g block.",
+      "category": "Dairy",
+      "priceCents": 549,
+      "inventory_count": 18,
+      "imageUrl": "/images/butter-250g.jpg"
+    },
+    {
+      "productId": "SKU-007",
+      "name": "Cheddar Cheese 200g",
+      "description": "Mature cheddar block, 200g.",
+      "category": "Dairy",
+      "priceCents": 799,
+      "inventory_count": 16,
+      "imageUrl": "/images/cheddar-200g.jpg"
+    },
+    {
+      "productId": "SKU-008",
+      "name": "Orange Juice 1L",
+      "description": "Freshly squeezed style orange juice, 1 litre.",
+      "category": "Beverages",
+      "priceCents": 499,
+      "inventory_count": 26,
+      "imageUrl": "/images/oj-1l.jpg"
+    },
+    {
+      "productId": "SKU-009",
+      "name": "Chocolate Bar 50g",
+      "description": "Milk chocolate bar, 50g.",
+      "category": "Confectionery",
+      "priceCents": 199,
+      "inventory_count": 120,
+      "imageUrl": "/images/choc-50g.jpg"
+    },
+    {
+      "productId": "SKU-010",
+      "name": "Potato Chips 150g",
+      "description": "Crispy salted potato chips, 150g bag.",
+      "category": "Snacks",
+      "priceCents": 299,
+      "inventory_count": 70,
+      "imageUrl": "/images/chips-150g.jpg"
+    },
+    {
+      "productId": "SKU-011",
+      "name": "Breakfast Cereal 500g",
+      "description": "Whole grain breakfast cereal, 500g box.",
+      "category": "Pantry",
+      "priceCents": 699,
+      "inventory_count": 25,
+      "imageUrl": "/images/cereal-500g.jpg"
+    },
+    {
+      "productId": "SKU-012",
+      "name": "Yoghurt Natural 150g",
+      "description": "Natural yogurt pot, 150g.",
+      "category": "Dairy",
+      "priceCents": 149,
+      "inventory_count": 80,
+      "imageUrl": "/images/yoghurt-150g.jpg"
+    },
+    {
+      "productId": "SKU-013",
+      "name": "Bananas (per kg)",
+      "description": "Fresh bananas sold per kilogram.",
+      "category": "Produce",
+      "priceCents": 399,
+      "inventory_count": 35,
+      "imageUrl": "/images/bananas-kg.jpg"
+    },
+    {
+      "productId": "SKU-014",
+      "name": "Gala Apples (pack)",
+      "description": "Pack of 4 Gala apples.",
+      "category": "Produce",
+      "priceCents": 499,
+      "inventory_count": 28,
+      "imageUrl": "/images/apples-pack.jpg"
+    },
+    {
+      "productId": "SKU-015",
+      "name": "Shampoo 400mL",
+      "description": "Daily care shampoo, 400mL bottle.",
+      "category": "Toiletries",
+      "priceCents": 699,
+      "inventory_count": 34,
+      "imageUrl": "/images/shampoo-400ml.jpg"
+    },
+    {
+      "productId": "SKU-016",
+      "name": "Hand Soap 250mL",
+      "description": "Liquid hand soap, 250mL pump bottle.",
+      "category": "Toiletries",
+      "priceCents": 249,
+      "inventory_count": 50,
+      "imageUrl": "/images/soap-250ml.jpg"
+    },
+    {
+      "productId": "SKU-017",
+      "name": "Toothpaste 120g",
+      "description": "Fluoride toothpaste, 120g tube.",
+      "category": "Toiletries",
+      "priceCents": 399,
+      "inventory_count": 40,
+      "imageUrl": "/images/toothpaste-120g.jpg"
+    },
+    {
+      "productId": "SKU-018",
+      "name": "AA Batteries (4 pack)",
+      "description": "Alkaline AA batteries, 4 pack.",
+      "category": "Household",
+      "priceCents": 599,
+      "inventory_count": 60,
+      "imageUrl": "/images/batteries-aa-4.jpg"
+    },
+    {
+      "productId": "SKU-019",
+      "name": "Energy Drink 330mL",
+      "description": "Caffeinated energy drink, 330mL can.",
+      "category": "Beverages",
+      "priceCents": 299,
+      "inventory_count": 90,
+      "imageUrl": "/images/energy-330ml.jpg"
+    },
+    {
+      "productId": "SKU-020",
+      "name": "Bottled Water 600mL",
+      "description": "Still drinking water, 600mL bottle.",
+      "category": "Beverages",
+      "priceCents": 149,
+      "inventory_count": 200,
+      "imageUrl": "/images/water-600ml.jpg"
+    },
+    {
+      "productId": "SKU-021",
+      "name": "Frozen Pizza 400g",
+      "description": "Stone-baked style frozen pizza, 400g.",
+      "category": "Frozen",
+      "priceCents": 899,
+      "inventory_count": 12,
+      "imageUrl": "/images/pizza-400g.jpg"
+    },
+    {
+      "productId": "SKU-022",
+      "name": "Ice Cream Tub 1L",
+      "description": "Vanilla ice cream tub, 1 litre.",
+      "category": "Frozen",
+      "priceCents": 699,
+      "inventory_count": 10,
+      "imageUrl": "/images/icecream-1l.jpg"
+    },
+    {
+      "productId": "SKU-023",
+      "name": "Spaghetti Pasta 500g",
+      "description": "Durum wheat spaghetti, 500g pack.",
+      "category": "Pantry",
+      "priceCents": 299,
+      "inventory_count": 45,
+      "imageUrl": "/images/pasta-500g.jpg"
+    },
+    {
+      "productId": "SKU-024",
+      "name": "Pasta Sauce 500g",
+      "description": "Tomato and basil pasta sauce, 500g jar.",
+      "category": "Pantry",
+      "priceCents": 499,
+      "inventory_count": 36,
+      "imageUrl": "/images/pasta-sauce-500g.jpg"
+    }
+  ]
+}
