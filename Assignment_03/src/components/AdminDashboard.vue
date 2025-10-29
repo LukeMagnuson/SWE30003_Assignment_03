@@ -129,7 +129,6 @@ export default {
   }
   ,
   watch: {
-    // optional UX: if search changes we could do something (e.g. reset pagination)
     searchTerm() {
       // no-op placeholder; keeps reactivity and allows future behaviour
     }

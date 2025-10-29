@@ -2,12 +2,6 @@
   <div class="shop-view">
     <h1>Shop</h1>
 
-    <!-- ADMIN: add product form -->
-    <section class="admin" v-if="isAdmin">
-      <AddProductForm ref="addForm" @add="onAddProduct" />
-      <p class="admin-message" v-if="adminMessage">{{ adminMessage }}</p>
-    </section>
-
     <!-- Search -->
     <input v-model="searchTerm" placeholder="Search products..." class="search" />
 
@@ -27,9 +21,7 @@
             <span class="stock">Stock: <b>{{ shopItem.quantityAvailable }}</b></span>
             <span class="price">Price: ${{ (shopItem.priceCents / 100).toFixed(2) }}</span>
           </div>
-          <div class="product-actions">
-            <button v-if="isAdmin" @click="confirmRemove(shopItem)">Remove</button>
-          </div>
+          
         </div>
       </li>
     </ul>
@@ -45,25 +37,16 @@
 
 <script>
 import ProductCatalogue from '../models/ProductCatalogue';
-import auth from '../models/AuthenticationService';
-import AddProductForm from './AddProductForm.vue';
 
 export default {
-  components: { AddProductForm },
   data() {
     return {
-      isAdmin: false,
       catalogue: null,
       searchTerm: '',
       currentPage: 1,
       itemsPerPage: 8,
       placeholder: '/images/Supa_Team_4.jpg',
-      adminMessage: '',
-      // addForm state moved to AddProductForm component
     };
-  },
-  mounted() {
-    // existing mounted code moved below; use a separate lifecycle hook for auth polling
   },
   computed: {
     filteredShop() {
@@ -96,115 +79,31 @@ export default {
         e.target.onerror = null;
         e.target.src = this.placeholder;
       }
-    },
-
-    async onAddProduct(dto) {
-      const apiUrl = 'http://localhost:3000/products';
-      try {
-        const res = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(dto)
-        });
-        if (!res.ok) {
-          throw new Error(`Server returned ${res.status} ${res.statusText}`);
-        }
-        const saved = await res.json();
-        this.adminMessage = `Added product ${saved.productId || saved.name}`;
-        // reload catalogue from API so in-memory state matches server
-        this.catalogue = await ProductCatalogue.loadFromUrl(apiUrl);
-        // reset child form if available
-        if (this.$refs && this.$refs.addForm && this.$refs.addForm.resetForm) this.$refs.addForm.resetForm();
-      } catch (err) {
-        this.adminMessage = `Failed to add product: ${err.message}`;
-        console.error('Add product error', err);
-      }
-    },
-
-    // Find json-server's numeric id for an item with given productId
-    async findServerRecord(productId) {
-      const apiUrl = 'http://localhost:3000/products';
-      const res = await fetch(`${apiUrl}?productId=${encodeURIComponent(productId)}`);
-      if (!res.ok) throw new Error(`Failed to query server: ${res.status}`);
-      const arr = await res.json();
-      return Array.isArray(arr) && arr.length > 0 ? arr[0] : undefined;
-    },
-
-    async removeProductFromServer(productId) {
-      try {
-        const apiUrl = 'http://localhost:3000/products';
-        const rec = await this.findServerRecord(productId);
-        if (!rec || rec.id === undefined) {
-          // fallback: try delete by numeric id if productId is numeric; else treat as not found
-          this.adminMessage = `Product ${productId} not found on server`;
-          return false;
-        }
-        const delRes = await fetch(`${apiUrl}/${rec.id}`, { method: 'DELETE' });
-        if (!delRes.ok) throw new Error(`Delete failed: ${delRes.status}`);
-        // reload catalogue to reflect deletion
-        this.catalogue = await ProductCatalogue.loadFromUrl(apiUrl);
-        return true;
-      } catch (err) {
-        this.adminMessage = `Failed to remove product: ${err.message}`;
-        console.error('Remove product error', err);
-        return false;
-      }
-    },
-
-    confirmRemove(product) {
-      if (!confirm(`Remove product ${product.name} (${product.productId})?`)) return;
-      this.removeProductFromServer(product.productId)
-        .then(ok => {
-          if (ok) this.adminMessage = `Removed ${product.productId}`;
-        })
-        .catch(err => {
-          console.error(err);
-          this.adminMessage = `Error removing ${product.productId}: ${err.message}`;
-        });
     }
   },
-  created() {
-    // check admin role initially and set up listeners
-    this.updateRole = () => {
-      const token = localStorage.getItem('auth_token');
-      if (!token) {
-        this.isAdmin = false;
-        return;
-      }
-      try {
-        const user = auth.validateSession(token);
-        this.isAdmin = !!(user && (user.getRole && user.getRole() === 'Admin'));
-      } catch (e) {
-        this.isAdmin = false;
-      }
-    };
-    this.updateRole();
-    // poll occasionally to pick up same-tab login/logout
-    this._rolePoll = setInterval(this.updateRole, 1000);
-    window.addEventListener('storage', this.updateRole);
-  },
-  beforeUnmount() {
-    if (this._rolePoll) clearInterval(this._rolePoll);
-    window.removeEventListener('storage', this.updateRole);
-  },
+  
   watch: {
     searchTerm() { this.currentPage = 1; }
   },
   async mounted() {
-    const apiUrl = 'http://localhost:3000/products';
-    const fallbackUrl = '/data/shop.json';
-    try {
-      this.catalogue = await ProductCatalogue.loadFromUrl(apiUrl);
-      console.info('Loaded product catalogue from API:', apiUrl);
-    } catch (apiErr) {
-      console.warn('Failed to load from API, falling back to static JSON:', apiErr);
+    // Try a set of likely locations for the static JSON file so the view works
+    // whether the app is served by Vite dev server or via a built /dist.
+    // Try db.json first (the app's JSON database), then the legacy shop.json locations.
+    const candidates = ['/db.json', 'db.json', './db.json', '/data/shop.json', 'data/shop.json', './data/shop.json', '/public/data/shop.json'];
+    let loaded = false;
+    for (const url of candidates) {
       try {
-        this.catalogue = await ProductCatalogue.loadFromUrl(fallbackUrl);
-        console.info('Loaded product catalogue from fallback JSON:', fallbackUrl);
-      } catch (jsonErr) {
-        console.error('Failed to load product data from API and fallback JSON', jsonErr);
-        this.catalogue = new ProductCatalogue([]);
+        this.catalogue = await ProductCatalogue.loadFromUrl(url);
+        console.info('Loaded product catalogue from:', url);
+        loaded = true;
+        break;
+      } catch (err) {
+        console.debug('Failed to load from', url, err && err.message ? err.message : err);
       }
+    }
+    if (!loaded) {
+      console.error('Failed to load product data from any candidate URL, using empty catalogue');
+      this.catalogue = new ProductCatalogue([]);
     }
   }
 };

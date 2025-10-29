@@ -92,7 +92,8 @@ export class ProductCatalogue {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Failed to fetch product data from ${url}: ${res.status} ${res.statusText}`);
     const json = await res.json();
-    const dtos: ProductDTO[] = Array.isArray(json) ? json : json.items ?? [];
+    // Accept multiple JSON shapes: either an array, or an object with `items` or `products` keys.
+    const dtos: ProductDTO[] = Array.isArray(json) ? json : (json.items ?? json.products ?? []);
     const products = dtos.map((d) => ProductCatalogue.productFromDTO(d));
     return new ProductCatalogue(products);
   }
