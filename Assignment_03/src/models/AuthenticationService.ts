@@ -35,6 +35,8 @@ export class AuthenticationService {
 
   private constructor() {
     // private for singleton
+    // attempt to restore persisted state (users + sessions) so sessions survive page reloads
+    try { this.loadState(); } catch { /* ignore load errors and continue with fresh state */ }
   }
 
   static getInstance(): AuthenticationService {
@@ -69,6 +71,8 @@ export class AuthenticationService {
     const pwHash = this.hashPassword(password);
     this.usersById.set(user.userId, { user, passwordHash: pwHash });
     this.usersByEmail.set(normalizedEmail, user.userId);
+    // persist updated users
+    try { this.saveState(); } catch { }
     return user;
   }
 
@@ -86,6 +90,8 @@ export class AuthenticationService {
     const token = this.createToken();
     const expiresAt = Date.now() + this.sessionTTLms;
     this.sessions.set(token, { userId: record.user.userId, expiresAt });
+    // persist new session so it survives reloads
+    try { this.saveState(); } catch { }
     return token;
   }
 
@@ -99,6 +105,8 @@ export class AuthenticationService {
     }
     // sliding expiration: extend the session
     rec.expiresAt = Date.now() + this.sessionTTLms;
+  // persist updated expiry
+  try { this.saveState(); } catch { }
     const userRecord = this.usersById.get(rec.userId);
     if (!userRecord) {
       this.sessions.delete(token);
@@ -110,6 +118,7 @@ export class AuthenticationService {
   // Invalidate a session token
   logout(token: string): void {
     this.sessions.delete(token);
+    try { this.saveState(); } catch { }
   }
 
   // Change password for a user (requires old password)
@@ -118,6 +127,7 @@ export class AuthenticationService {
     if (!rec) throw new Error('User not found');
     if (rec.passwordHash !== this.hashPassword(oldPassword)) throw new InvalidCredentialsError('Current password incorrect');
     rec.passwordHash = this.hashPassword(newPassword);
+    try { this.saveState(); } catch { }
   }
 
   // permission check: returns true if user has permission
@@ -139,6 +149,84 @@ export class AuthenticationService {
   private createToken(): string {
     // quick non-crypto token for demo
     return Math.random().toString(36).slice(2) + Date.now().toString(36);
+  }
+
+  // Persist minimal state (users and sessions) to localStorage so sessions survive reloads.
+  // This is a demo convenience; do NOT use this approach for production auth.
+  private saveKey = 'auth_state_v1';
+
+  private saveState() {
+    try {
+      const users: Record<string, any> = {};
+      this.usersById.forEach(({ user, passwordHash }, id) => {
+        users[id] = { user: (user as any).toJSON ? (user as any).toJSON() : { userId: user.userId }, passwordHash };
+      });
+      const sessionsObj: Record<string, SessionRecord> = {};
+      this.sessions.forEach((rec, token) => {
+        sessionsObj[token] = { userId: rec.userId, expiresAt: rec.expiresAt };
+      });
+      const payload = {
+        users,
+        usersByEmail: Array.from(this.usersByEmail.entries()),
+        sessions: sessionsObj
+      };
+      localStorage.setItem(this.saveKey, JSON.stringify(payload));
+    } catch (e) {
+      // ignore persistence errors for demo
+      // eslint-disable-next-line no-console
+      console.warn('Failed to save auth state', e);
+    }
+  }
+
+  private loadState() {
+    const raw = localStorage.getItem(this.saveKey);
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') return;
+
+      // restore users
+      const users = parsed.users || {};
+      for (const userId of Object.keys(users)) {
+        const rec = users[userId];
+        const ujson = rec.user || {};
+        const role = ujson.role || 'Customer';
+        let user: User;
+        if (role === 'Admin') {
+          // Admin expects (userId, contact, initialPermissions)
+          user = new Admin(userId, { name: ujson.name || 'Admin', email: ujson.email || '' , phone: ujson.phone }, ujson.permissions || []);
+          // restore lastAction if present
+          if (ujson.lastAction && (user as Admin).recordAction) {
+            try { (user as Admin).recordAction(ujson.lastAction); } catch { }
+          }
+        } else {
+          user = new Customer(userId, { name: ujson.name || 'Customer', email: ujson.email || '' , phone: ujson.phone }, { deliveryAddress: ujson.deliveryAddress, cartId: ujson.cartId });
+        }
+        const pwHash = rec.passwordHash || '';
+        this.usersById.set(userId, { user, passwordHash: pwHash });
+      }
+
+      // restore usersByEmail
+      if (Array.isArray(parsed.usersByEmail)) {
+        for (const [email, id] of parsed.usersByEmail) {
+          this.usersByEmail.set(email, id);
+        }
+      }
+
+      // restore sessions
+      const sessionsObj = parsed.sessions || {};
+      for (const token of Object.keys(sessionsObj)) {
+        const rec = sessionsObj[token];
+        // only restore sessions that haven't expired yet
+        if (rec && rec.expiresAt && rec.expiresAt > Date.now()) {
+          this.sessions.set(token, { userId: rec.userId, expiresAt: rec.expiresAt });
+        }
+      }
+    } catch (e) {
+      // if parsing fails, ignore and start fresh
+      // eslint-disable-next-line no-console
+      console.warn('Failed to load auth state', e);
+    }
   }
 
   // For demo/testing: seed an admin and a customer if none exist

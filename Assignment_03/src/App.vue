@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import SiteFooter from './components/SiteFooter.vue';
 import SiteHeader from './components/SiteHeader.vue';
+import DebugUserStatus from './components/DebugUserStatus.vue';
 
 </script>
 
 <template>
   <div class="app-container">
     <SiteHeader />
+    <DebugUserStatus />
 
     <main>
       <RouterView />
