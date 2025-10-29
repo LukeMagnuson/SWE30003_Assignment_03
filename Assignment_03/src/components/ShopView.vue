@@ -225,6 +225,7 @@ export default {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   flex: 1 1 auto; /* allow description to take available space */
 }
