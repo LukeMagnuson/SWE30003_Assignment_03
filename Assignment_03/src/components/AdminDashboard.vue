@@ -3,24 +3,30 @@
     <h1>Admin Dashboard</h1>
     <p v-if="message" class="message">{{ message }}</p>
 
-    <AddProductForm ref="addForm" @add="onAddProduct" />
+    <details class="product-management">
+      <summary>Product Management</summary>
 
-    <section class="list">
-      <h2>Products</h2>
-      <ul class="product-list">
-        <li v-for="p in products" :key="p.productId" class="product-item">
-          <img :src="computeImageSrc(p)" alt="" @error="onImgError($event)" />
-          <div class="meta">
-            <div class="name">{{ p.name }} <small>({{ p.productId }})</small></div>
-            <div class="desc">{{ p.description }}</div>
-            <div class="info">Stock: {{ p.inventory_count ?? p.quantityAvailable }} — ${{ ((p.priceCents ?? (p.price*100))/100).toFixed(2) }}</div>
-            <div class="actions">
-              <button @click="removeProduct(p)">Remove</button>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </section>
+      <div class="management-contents">
+        <AddProductForm ref="addForm" @add="onAddProduct" />
+
+        <section class="list">
+          <h2>Products</h2>
+          <ul class="product-list">
+            <li v-for="p in products" :key="p.productId" class="product-item">
+              <img :src="computeImageSrc(p)" alt="" @error="onImgError($event)" />
+              <div class="meta">
+                <div class="name">{{ p.name }} <small>({{ p.productId }})</small></div>
+                <div class="desc">{{ p.description }}</div>
+                <div class="info">Stock: {{ p.inventory_count ?? p.quantityAvailable }} — ${{ ((p.priceCents ?? (p.price*100))/100).toFixed(2) }}</div>
+                <div class="actions">
+                  <button @click="removeProduct(p)">Remove</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </details>
   </div>
 </template>
 
@@ -125,4 +131,9 @@ export default {
 .desc { color:#555; font-size:0.9rem; margin:0.25rem 0; }
 .actions { margin-top:0.5rem; }
 .message { color:#060; }
+
+/* Product management collapsible */
+.product-management { margin-bottom: 1rem; }
+.product-management summary { cursor: pointer; padding: 0.5rem 0.6rem; background:#f3f3f3; border-radius:6px; font-weight:600; }
+.product-management .management-contents { margin-top:0.75rem; padding:0.6rem; background:#fff; border:1px solid #eee; border-radius:6px; }
 </style>
