@@ -152,7 +152,7 @@ export class AuthenticationService {
   }
 
   // Persist minimal state (users and sessions) to localStorage so sessions survive reloads.
-  // This is a demo convenience; do NOT use this approach for production auth.
+  // This is just a demo convenience
   private saveKey = 'auth_state_v1';
 
   private saveState() {
