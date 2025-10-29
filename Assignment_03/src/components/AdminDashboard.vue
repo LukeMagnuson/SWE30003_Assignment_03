@@ -64,7 +64,7 @@ export default {
         imageUrl: '',
         description: ''
       },
-      placeholder: '/images/placeholder.png'
+      placeholder: '/images/Supa_Team_4.jpg'
     };
   },
   methods: {

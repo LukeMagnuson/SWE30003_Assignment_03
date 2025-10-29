@@ -3,7 +3,7 @@
     <h1>Shop</h1>
 
     <!-- ADMIN: add product form -->
-    <section class="admin">
+    <section class="admin" v-if="isAdmin">
       <h2>Add Product</h2>
       <form @submit.prevent="onAddProduct">
         <div class="row">
@@ -47,7 +47,7 @@
             <span class="price">Price: ${{ (shopItem.priceCents / 100).toFixed(2) }}</span>
           </div>
           <div class="product-actions">
-            <button @click="confirmRemove(shopItem)">Remove</button>
+            <button v-if="isAdmin" @click="confirmRemove(shopItem)">Remove</button>
           </div>
         </div>
       </li>
@@ -64,10 +64,12 @@
 
 <script>
 import ProductCatalogue from '../models/ProductCatalogue';
+import auth from '../models/AuthenticationService';
 
 export default {
   data() {
     return {
+      isAdmin: false,
       catalogue: null,
       searchTerm: '',
       currentPage: 1,
@@ -84,6 +86,9 @@ export default {
         description: ''
       }
     };
+  },
+  mounted() {
+    // existing mounted code moved below; use a separate lifecycle hook for auth polling
   },
   computed: {
     filteredShop() {
@@ -205,6 +210,30 @@ export default {
           this.adminMessage = `Error removing ${product.productId}: ${err.message}`;
         });
     }
+  },
+  created() {
+    // check admin role initially and set up listeners
+    this.updateRole = () => {
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        this.isAdmin = false;
+        return;
+      }
+      try {
+        const user = auth.validateSession(token);
+        this.isAdmin = !!(user && (user.getRole && user.getRole() === 'Admin'));
+      } catch (e) {
+        this.isAdmin = false;
+      }
+    };
+    this.updateRole();
+    // poll occasionally to pick up same-tab login/logout
+    this._rolePoll = setInterval(this.updateRole, 1000);
+    window.addEventListener('storage', this.updateRole);
+  },
+  beforeUnmount() {
+    if (this._rolePoll) clearInterval(this._rolePoll);
+    window.removeEventListener('storage', this.updateRole);
   },
   watch: {
     searchTerm() { this.currentPage = 1; }
