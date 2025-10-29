@@ -3,28 +3,7 @@
     <h1>Admin Dashboard</h1>
     <p v-if="message" class="message">{{ message }}</p>
 
-    <section class="management">
-      <h2>Add Product</h2>
-      <form @submit.prevent="onAddProduct">
-        <div class="row">
-          <input v-model="form.productId" placeholder="productId (SKU)" required />
-          <input v-model="form.name" placeholder="Name" required />
-          <input v-model.number="form.price" type="number" step="0.01" placeholder="Price (AUD)" required />
-          <input v-model.number="form.quantity" type="number" min="0" placeholder="Quantity" required />
-        </div>
-        <div class="row">
-          <input v-model="form.category" placeholder="Category" />
-          <input v-model="form.imageUrl" placeholder="Image URL or filename" />
-        </div>
-        <div class="row">
-          <textarea v-model="form.description" placeholder="Description"></textarea>
-        </div>
-        <div class="row">
-          <button type="submit">Add Product</button>
-          <button type="button" @click="resetForm">Reset</button>
-        </div>
-      </form>
-    </section>
+    <AddProductForm ref="addForm" @add="onAddProduct" />
 
     <section class="list">
       <h2>Products</h2>
@@ -47,23 +26,17 @@
 
 <script>
 import ProductCatalogue from '../models/ProductCatalogue';
+import AddProductForm from './AddProductForm.vue';
 
 export default {
   name: 'AdminDashboard',
+  components: { AddProductForm },
   data() {
     return {
       catalogue: null,
       products: [],
       message: '',
-      form: {
-        productId: '',
-        name: '',
-        price: 0,
-        quantity: 0,
-        category: '',
-        imageUrl: '',
-        description: ''
-      },
+      // form state moved to AddProductForm component
       placeholder: '/images/Supa_Team_4.jpg'
     };
   },
@@ -94,27 +67,15 @@ export default {
     onImgError(e) {
       if (e && e.target) e.target.src = this.placeholder;
     },
-    resetForm() {
-      this.form = { productId: '', name: '', price: 0, quantity: 0, category: '', imageUrl: '', description: '' };
-      this.message = '';
-    },
-    async onAddProduct() {
+    async onAddProduct(dto) {
       const apiUrl = 'http://localhost:3000/products';
-      const dto = {
-        productId: this.form.productId,
-        name: this.form.name,
-        price: this.form.price, // price in dollars -> catalogue maps to cents
-        inventory_count: this.form.quantity,
-        category: this.form.category || undefined,
-        imageUrl: this.form.imageUrl || undefined,
-        description: this.form.description || undefined
-      };
       try {
         const res = await fetch(apiUrl, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(dto) });
         if (!res.ok) throw new Error('Server returned ' + res.status);
         await this.loadCatalog();
         this.message = `Added ${dto.productId || dto.name}`;
-        this.resetForm();
+        // reset child form
+        if (this.$refs && this.$refs.addForm && this.$refs.addForm.resetForm) this.$refs.addForm.resetForm();
       } catch (err) {
         console.error(err);
         this.message = 'Add failed: ' + err.message;

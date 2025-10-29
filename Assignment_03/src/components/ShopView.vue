@@ -4,26 +4,7 @@
 
     <!-- ADMIN: add product form -->
     <section class="admin" v-if="isAdmin">
-      <h2>Add Product</h2>
-      <form @submit.prevent="onAddProduct">
-        <div class="row">
-          <input v-model="addForm.productId" placeholder="productId (SKU)" required />
-          <input v-model="addForm.name" placeholder="Name" required />
-          <input v-model.number="addForm.price" type="number" step="0.01" placeholder="Price (AUD)" required />
-          <input v-model.number="addForm.quantity" type="number" min="0" placeholder="Quantity" required />
-        </div>
-        <div class="row">
-          <input v-model="addForm.category" placeholder="Category (optional)" />
-          <input v-model="addForm.imageUrl" placeholder="Image URL or filename (optional)" />
-        </div>
-        <div class="row">
-          <textarea v-model="addForm.description" placeholder="Description (optional)"></textarea>
-        </div>
-        <div class="row">
-          <button type="submit">Add Product</button>
-          <button type="button" @click="resetAddForm">Reset</button>
-        </div>
-      </form>
+      <AddProductForm ref="addForm" @add="onAddProduct" />
       <p class="admin-message" v-if="adminMessage">{{ adminMessage }}</p>
     </section>
 
@@ -65,8 +46,10 @@
 <script>
 import ProductCatalogue from '../models/ProductCatalogue';
 import auth from '../models/AuthenticationService';
+import AddProductForm from './AddProductForm.vue';
 
 export default {
+  components: { AddProductForm },
   data() {
     return {
       isAdmin: false,
@@ -76,15 +59,7 @@ export default {
       itemsPerPage: 8,
       placeholder: '/images/Supa_Team_4.jpg',
       adminMessage: '',
-      addForm: {
-        productId: '',
-        name: '',
-        price: 0.0,
-        quantity: 0,
-        category: '',
-        imageUrl: '',
-        description: ''
-      }
+      // addForm state moved to AddProductForm component
     };
   },
   mounted() {
@@ -123,31 +98,7 @@ export default {
       }
     },
 
-    resetAddForm() {
-      this.addForm = {
-        productId: '',
-        name: '',
-        price: 0.0,
-        quantity: 0,
-        category: '',
-        imageUrl: '',
-        description: ''
-      };
-      this.adminMessage = '';
-    },
-
-    async onAddProduct() {
-      // construct DTO accepted by productFromDTO and json-server
-      const dto = {
-        productId: this.addForm.productId,
-        name: this.addForm.name,
-        price: this.addForm.price, // ProductCatalogue maps price (dollars) -> priceCents
-        inventory_count: this.addForm.quantity,
-        category: this.addForm.category || undefined,
-        imageUrl: this.addForm.imageUrl || undefined,
-        description: this.addForm.description || undefined
-      };
-
+    async onAddProduct(dto) {
       const apiUrl = 'http://localhost:3000/products';
       try {
         const res = await fetch(apiUrl, {
@@ -162,7 +113,8 @@ export default {
         this.adminMessage = `Added product ${saved.productId || saved.name}`;
         // reload catalogue from API so in-memory state matches server
         this.catalogue = await ProductCatalogue.loadFromUrl(apiUrl);
-        this.resetAddForm();
+        // reset child form if available
+        if (this.$refs && this.$refs.addForm && this.$refs.addForm.resetForm) this.$refs.addForm.resetForm();
       } catch (err) {
         this.adminMessage = `Failed to add product: ${err.message}`;
         console.error('Add product error', err);
