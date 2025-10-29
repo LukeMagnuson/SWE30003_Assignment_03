@@ -1,5 +1,5 @@
 <template>
-  <div class="shop-view">
+  <div class="shop-view" ref="shopView">
     <h1>Shop</h1>
 
     <!-- Search -->
@@ -65,6 +65,43 @@ export default {
     nextPage() { if (this.currentPage < this.totalPages) this.currentPage++; },
     prevPage() { if (this.currentPage > 1) this.currentPage--; },
 
+    // Recalculate itemsPerPage to fill the visible area based on container size.
+    recalcItemsPerPage() {
+      try {
+        const container = this.$refs.shopView;
+        if (!container) return;
+        const containerRect = container.getBoundingClientRect();
+        const containerWidth = containerRect.width;
+        const containerTop = containerRect.top;
+
+        // Estimate product item width/height. Use existing rendered element if available.
+        const firstItem = container.querySelector('.product-item');
+  const itemWidth = firstItem ? firstItem.offsetWidth : 260; // px
+  const itemHeight = firstItem ? firstItem.offsetHeight : 220; // px
+
+  // Use a consistent minimum item width to avoid text overflow when items shrink.
+  const minItemWidth = 260; // pixels (matches CSS fixed column)
+  const columns = Math.max(1, Math.floor(containerWidth / minItemWidth));
+
+        // Determine available vertical space between top of container and top of footer (or bottom of viewport)
+        const viewportHeight = window.innerHeight;
+        let footerEl = document.querySelector('.site-footer') || document.querySelector('footer');
+        const footerHeight = footerEl ? footerEl.offsetHeight : 0;
+        const availableHeight = Math.max(0, viewportHeight - containerTop - footerHeight - 24); // 24px cushion
+
+  const minItemHeight = 220; // fixed item height (matches CSS)
+  const rows = Math.max(1, Math.floor(availableHeight / Math.max(minItemHeight, itemHeight)));
+        const newItemsPerPage = Math.max(1, columns * rows);
+        if (newItemsPerPage !== this.itemsPerPage) {
+          this.itemsPerPage = newItemsPerPage;
+          this.currentPage = 1;
+        }
+      } catch (e) {
+        // swallow measurement errors silently
+        console.debug('recalcItemsPerPage failed', e && e.message ? e.message : e);
+      }
+    },
+
     computeImageSrc(product) {
       const url = product.imageUrl || '';
       const trimmed = String(url).trim();
@@ -105,14 +142,31 @@ export default {
       console.error('Failed to load product data from any candidate URL, using empty catalogue');
       this.catalogue = new ProductCatalogue([]);
     }
+
+    // After catalogue is set and DOM rendered, calculate items per page and listen for resizes
+    this.$nextTick(() => {
+      this.recalcItemsPerPage();
+    });
+    this._onResize = () => this.recalcItemsPerPage();
+    window.addEventListener('resize', this._onResize);
+    window.addEventListener('orientationchange', this._onResize);
+  }
+  ,
+  beforeUnmount() {
+    if (this._onResize) {
+      window.removeEventListener('resize', this._onResize);
+      window.removeEventListener('orientationchange', this._onResize);
+    }
   }
 };
 </script>
 
 <style scoped>
 .shop-view {
-  max-width: 960px;
-  margin: 0 auto;
+  /* make the shop view span the full width so product grid can fill horizontally */
+  width: 100%;
+  max-width: none;
+  margin: 0;
   padding: 1rem;
 }
 .admin {
@@ -133,19 +187,26 @@ export default {
 }
 .product-list {
   list-style: none;
-  padding: 0;
+  padding: 0 1rem; /* keep a little horizontal padding from the viewport edges */
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  /* fixed-width columns so item boxes remain uniform */
+  grid-template-columns: repeat(auto-fill, 260px);
+  justify-content: space-between; /* distribute extra space between columns, do not stretch items */
   gap: 1rem;
 }
 .product-item {
   display: flex;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.5rem;
   padding: 0.75rem;
   border: 1px solid #eee;
   border-radius: 6px;
-  align-items: flex-start;
+  align-items: stretch;
   background: #fff;
+  width: 260px; /* fixed width to keep boxes uniform */
+  height: 260px; /* fixed height so every item occupies the same space */
+  box-sizing: border-box;
+  overflow: hidden;
 }
 .product-image {
   width: 96px;
@@ -155,10 +216,28 @@ export default {
   flex-shrink: 0;
   background: #f6f6f6;
 }
-.product-info { flex:1; }
+.product-info { display:flex; flex-direction:column; flex:1; }
 .product-name { font-weight: 600; margin-bottom: 0.25rem; }
-.product-desc { font-size: 0.9rem; color: #555; margin-bottom: 0.5rem; }
-.product-meta { display:flex; gap:1rem; font-size: 0.9rem; color:#333; margin-bottom:0.5rem; }
+.product-desc {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  flex: 1 1 auto; /* allow description to take available space */
+}
+.product-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0; /* remove bottom margin */
+  margin-top: auto; /* push meta to bottom of the product-info column */
+  justify-content: space-between;
+  align-items: center;
+}
 .product-actions { margin-top: 0.25rem; }
 .pagination { margin-top: 1rem; display:flex; gap:1rem; align-items:center; }
 .admin-message { color: #064; margin-top: 0.5rem; }
