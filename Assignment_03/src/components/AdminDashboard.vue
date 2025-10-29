@@ -9,15 +9,19 @@
       <div class="management-contents">
         <AddProductForm ref="addForm" @add="onAddProduct" />
 
-        <section class="list">
-          <h2>Products</h2>
-          <ul class="product-list">
-            <li v-for="p in products" :key="p.productId" class="product-item">
-              <img :src="computeImageSrc(p)" alt="" @error="onImgError($event)" />
+          <section class="list">
+            <h2>Products</h2>
+
+            <!-- Search (same UX as ShopView) -->
+            <input v-model="searchTerm" placeholder="Search products..." class="search" />
+
+            <ul class="product-list">
+              <li v-for="p in filteredProducts" :key="p.productId" class="product-item">
+                <img :src="computeImageSrc(p)" :alt="p.name || ''" @error="onImgError($event)" />
               <div class="meta">
-                <div class="name">{{ p.name }} <small>({{ p.productId }})</small></div>
-                <div class="desc">{{ p.description }}</div>
-                <div class="info">Stock: {{ p.inventory_count ?? p.quantityAvailable }} — ${{ ((p.priceCents ?? (p.price*100))/100).toFixed(2) }}</div>
+                  <div class="name">{{ p.name }} <small>({{ p.productId }})</small></div>
+                  <div class="desc">{{ p.description }}</div>
+                  <div class="info">Stock: {{ p.quantityAvailable }} — ${{ (p.priceCents/100).toFixed(2) }}</div>
                 <div class="actions">
                   <button @click="removeProduct(p)">Remove</button>
                 </div>
@@ -41,10 +45,18 @@ export default {
     return {
       catalogue: null,
       products: [],
+      searchTerm: '',
       message: '',
       // form state moved to AddProductForm component
       placeholder: '/images/Supa_Team_4.jpg'
     };
+  },
+  computed: {
+    filteredProducts() {
+      if (!this.catalogue) return [];
+      // ProductCatalogue.searchProducts returns Product instances
+      return this.catalogue.searchProducts(this.searchTerm);
+    }
   },
   methods: {
     async loadCatalog() {
@@ -115,6 +127,13 @@ export default {
   mounted() {
     this.loadCatalog();
   }
+  ,
+  watch: {
+    // optional UX: if search changes we could do something (e.g. reset pagination)
+    searchTerm() {
+      // no-op placeholder; keeps reactivity and allows future behaviour
+    }
+  }
 };
 </script>
 
@@ -123,6 +142,13 @@ export default {
 .management { margin-bottom: 1rem; background:#fafafa; padding:0.6rem; border-radius:6px; }
 .row { display:flex; gap:0.5rem; margin-bottom:0.5rem; }
 .row input, .row textarea { flex:1; padding:0.4rem; }
+.search {
+  display: block;
+  margin: 0 0 1rem 0;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
 .product-list { list-style:none; padding:0; display:grid; gap:0.6rem; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); }
 .product-item { display:flex; gap:0.6rem; padding:0.6rem; border:1px solid #eee; border-radius:6px; background:#fff; }
 .product-item img { width:96px; height:96px; object-fit:cover; border-radius:4px; }
