@@ -22,7 +22,7 @@ export class ShoppingCart {
     this.cartId = cartId.toString();
   }
 
-  // --- mutations ---------------------------------------------------------
+  // --- functions ---------------------------------------------------------
 
   addProduct(product: Product, quantity = 1): void {
     if (!Number.isInteger(quantity) || quantity <= 0) throw new Error('quantity must be integer > 0');
