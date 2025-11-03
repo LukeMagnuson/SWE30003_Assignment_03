@@ -1,10 +1,21 @@
 {
   "admins": [],
-  "customers": [],
+  "customers": [
+    {
+      "id": "cust-1",
+      "name": "john",
+      "email": "john@email.com",
+      "phone": "0412345678",
+      "role": "Customer",
+      "createdAt": "2025-11-03T20:56:29.546Z",
+      "deliveryAddress": "123 main st",
+      "password": "password"
+    }
+  ],
   "counters": [
     {
       "id": "customer",
-      "next": 1
+      "next": 2
     },
     {
       "id": "admin",

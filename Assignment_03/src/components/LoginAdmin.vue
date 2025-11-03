@@ -104,6 +104,25 @@ export default {
     }
   },
   methods: {
+    async isEmailRegisteredInDb(email) {
+      const e = String(email || '').trim().toLowerCase();
+      if (!e) return false;
+      try {
+        const [cRes, aRes] = await Promise.all([
+          fetch(`http://localhost:3000/customers?email=${encodeURIComponent(e)}`),
+          fetch(`http://localhost:3000/admins?email=${encodeURIComponent(e)}`)
+        ]);
+        const [cArr, aArr] = await Promise.all([
+          cRes.ok ? cRes.json() : [],
+          aRes.ok ? aRes.json() : []
+        ]);
+        const found = (arr) => Array.isArray(arr) && arr.some(u => String(u.email||'').toLowerCase() === e);
+        return found(cArr) || found(aArr);
+      } catch {
+        // If API unavailable, fall back to allowing registration (auth service will still guard duplicates)
+        return false;
+      }
+    },
     async doLogin() {
       try {
         this.message = '';
@@ -161,22 +180,44 @@ export default {
     async doRegister() {
       this.regMessage = '';
       try {
-  const type = this.reg.type === 'admin' ? 'admin' : 'customer';
-  const gen = await this.generateUserId(type === 'admin' ? 'admin' : 'cust');
-  const userId = gen.id;
+        const type = this.reg.type === 'admin' ? 'admin' : 'customer';
+        // 0) Check database for existing email first (authoritative)
+        const exists = await this.isEmailRegisteredInDb(this.reg.email);
+        if (exists) {
+          this.regMessage = 'Email is already registered.';
+          return;
+        }
+
+        const gen = await this.generateUserId(type === 'admin' ? 'admin' : 'cust');
+        const userId = gen.id;
         const createdAtISO = new Date().toISOString();
 
         // Create user in in-memory AuthenticationService for session support
-        auth.registerUser(
-          type,
-          userId,
-          this.reg.name,
-          this.reg.email,
-          this.reg.password,
-          type === 'admin'
-            ? { phone: this.reg.phone, permissions: ['catalog:write'] }
-            : { phone: this.reg.phone, deliveryAddress: this.reg.deliveryAddress }
-        );
+        try {
+          auth.registerUser(
+            type,
+            userId,
+            this.reg.name,
+            this.reg.email,
+            this.reg.password,
+            type === 'admin'
+              ? { phone: this.reg.phone, permissions: ['catalog:write'] }
+              : { phone: this.reg.phone, deliveryAddress: this.reg.deliveryAddress }
+          );
+        } catch (err) {
+          // If the in-memory service thinks the email exists, but DB says it doesn't,
+          // clear cached auth state and ask user to retry (no counter bump yet, so id won't be lost).
+          const dbStillFree = !(await this.isEmailRegisteredInDb(this.reg.email));
+          if (dbStillFree && /Email already registered/i.test(err?.message||'')) {
+            // Persist pending registration and hard-reload so the auth service reinitializes from empty state
+            try { sessionStorage.setItem('pending_reg_v1', JSON.stringify({ reg: this.reg })); } catch {}
+            try { localStorage.removeItem('auth_state_v1'); } catch {}
+            // reload to recreate the singleton without stale users
+            window.location.reload();
+            return;
+          }
+          throw err;
+        }
 
         // Persist to json-server (db.json)
         const endpoint = type === 'admin' ? 'http://localhost:3000/admins' : 'http://localhost:3000/customers';
@@ -243,12 +284,31 @@ export default {
       }
     }
   },
-  mounted() {
-    // seed demo users if service is empty (optional)
-    if (auth.seedIfEmpty) {
+  async mounted() {
+    // If resuming a pending registration (after reload), skip seeding to avoid noise
+    const pendingRaw = sessionStorage.getItem('pending_reg_v1');
+    const hasPending = !!pendingRaw;
+    if (!hasPending && auth.seedIfEmpty) {
       try { auth.seedIfEmpty(); } catch { /* ignore */ }
     }
     this.tryRestoreSession();
+
+    // Auto-resume registration after reload
+    if (hasPending) {
+      try {
+        const pending = JSON.parse(pendingRaw);
+        if (pending && pending.reg) {
+          this.reg = { ...this.reg, ...pending.reg };
+          // Attempt registration again (now with fresh auth state)
+          // Await to capture messages correctly
+          await this.doRegister();
+        }
+      } catch (e) {
+        // ignore resume errors
+      } finally {
+        try { sessionStorage.removeItem('pending_reg_v1'); } catch {}
+      }
+    }
   }
 };
 </script>
