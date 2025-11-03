@@ -122,17 +122,15 @@ export default {
       }
     },
     async generateUserId(prefix) {
-      // Use json-server counters to ensure monotonically increasing IDs (no reuse after deletion)
+      // Peek next number without incrementing; we'll increment only after successful registration.
       const base = 'http://localhost:3000/counters';
       const key = prefix === 'admin' ? 'admin' : 'customer';
-      // Ensure counter exists; GET /counters/:id returns the record or 404
       let ctr;
       try {
         const res = await fetch(`${base}/${key}`);
         if (res.ok) {
           ctr = await res.json();
         } else if (res.status === 404) {
-          // initialize
           const init = await fetch(base, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: key, next: 1 }) });
           ctr = await init.json();
         } else {
@@ -144,21 +142,28 @@ export default {
       }
 
       const seq = typeof ctr.next === 'number' ? ctr.next : 1;
-
-      // Increment counter: PATCH /counters/:id { next: seq + 1 }
+      return { id: `${prefix}-${seq}`, key, next: seq + 1 };
+    },
+    async bumpCounter(key, expectedNext) {
+      const base = 'http://localhost:3000/counters';
       try {
-        await fetch(`${base}/${key}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ next: seq + 1 }) });
+        const res = await fetch(`${base}/${key}`);
+        if (!res.ok) return;
+        const ctr = await res.json();
+        const currentNext = typeof ctr.next === 'number' ? ctr.next : 1;
+        if (currentNext < expectedNext) {
+          await fetch(`${base}/${key}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ next: expectedNext }) });
+        }
       } catch (e) {
-        console.warn('Counter increment failed', e);
+        console.warn('Counter bump failed', e);
       }
-
-      return `${prefix}-${seq}`;
     },
     async doRegister() {
       this.regMessage = '';
       try {
   const type = this.reg.type === 'admin' ? 'admin' : 'customer';
-  const userId = await this.generateUserId(type === 'admin' ? 'admin' : 'cust');
+  const gen = await this.generateUserId(type === 'admin' ? 'admin' : 'cust');
+  const userId = gen.id;
         const createdAtISO = new Date().toISOString();
 
         // Create user in in-memory AuthenticationService for session support
@@ -195,6 +200,9 @@ export default {
           body: JSON.stringify(dto)
         });
         if (!res.ok) throw new Error(`Register failed: ${res.status}`);
+
+        // Only now do we bump the counter; failed registrations won't advance it.
+        await this.bumpCounter(gen.key, gen.next);
 
         this.regMessage = `Account created for ${this.reg.email}. You can now log in.`;
         // await this.doLoginWith(this.reg.email, this.reg.password)
