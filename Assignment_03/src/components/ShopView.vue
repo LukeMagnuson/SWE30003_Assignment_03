@@ -1,6 +1,6 @@
 <template>
   <div class="shop-view" ref="shopView">
-    <h1>Shop</h1>
+    <h1>Catalogue</h1>
 
     <!-- Search -->
     <input v-model="searchTerm" placeholder="Search products..." class="search" />
