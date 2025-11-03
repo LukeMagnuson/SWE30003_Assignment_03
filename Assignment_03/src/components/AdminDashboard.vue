@@ -31,6 +31,33 @@
         </section>
       </div>
     </details>
+
+    <details class="user-management">
+      <summary>User Management</summary>
+
+      <div class="management-contents">
+        <div class="toolbar">
+          <input v-model="userSearchTerm" placeholder="Search users..." class="search" />
+          <button @click="loadUsers">Refresh</button>
+        </div>
+        <p v-if="userMessage" class="message">{{ userMessage }}</p>
+
+        <ul class="user-list">
+          <li v-for="u in filteredUsers" :key="u.id" class="user-item">
+            <div class="meta">
+              <div class="name">{{ u.name }} <small>({{ u.role }})</small></div>
+              <div class="desc">{{ u.email }} <span v-if="u.phone">• {{ u.phone }}</span></div>
+              <div class="info">ID: <code>{{ u.id }}</code> • Created: {{ formatDate(u.createdAt || u.creationDate) }}</div>
+              <div class="actions">
+                <button class="danger" @click="removeUser(u)">Delete</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <div v-if="filteredUsers.length === 0" class="empty">No users found.</div>
+      </div>
+    </details>
   </div>
 </template>
 
@@ -47,6 +74,10 @@ export default {
       products: [],
       searchTerm: '',
       message: '',
+      // users management state
+      users: [],
+      userSearchTerm: '',
+      userMessage: '',
       // form state moved to AddProductForm component
       placeholder: '/images/Supa_Team_4.jpg'
     };
@@ -56,6 +87,18 @@ export default {
       if (!this.catalogue) return [];
       // ProductCatalogue.searchProducts returns Product instances
       return this.catalogue.searchProducts(this.searchTerm);
+    },
+    filteredUsers() {
+      const k = (this.userSearchTerm || '').toLowerCase().trim();
+      if (!k) return this.users;
+      return this.users.filter(u => {
+        return (
+          String(u.name || '').toLowerCase().includes(k) ||
+          String(u.email || '').toLowerCase().includes(k) ||
+          String(u.role || '').toLowerCase().includes(k) ||
+          String(u.id || '').toLowerCase().includes(k)
+        );
+      });
     }
   },
   methods: {
@@ -72,6 +115,65 @@ export default {
         this.message = 'Failed to load products';
         this.catalogue = new ProductCatalogue([]);
         this.products = [];
+      }
+    },
+    formatDate(d) {
+      if (!d) return '';
+      const dt = new Date(d);
+      return isNaN(dt.getTime()) ? '' : dt.toLocaleString();
+    },
+    async loadUsers() {
+      const base = 'http://localhost:3000';
+      this.userMessage = '';
+      try {
+        const [cRes, aRes] = await Promise.all([
+          fetch(`${base}/customers`),
+          fetch(`${base}/admins`)
+        ]);
+        const customers = cRes.ok ? await cRes.json() : [];
+        const admins = aRes.ok ? await aRes.json() : [];
+        // Normalize shapes and combine
+        const norm = (arr, role) => (Array.isArray(arr) ? arr.map(x => ({
+          id: x.id || x.userId || '',
+          name: x.name || '',
+          email: (x.email || '').toLowerCase(),
+          phone: x.phone || '',
+          role: x.role || role,
+          createdAt: x.createdAt || x.creationDate || ''
+        })) : []);
+        this.users = [...norm(customers, 'Customer'), ...norm(admins, 'Admin')]
+          .sort((a,b) => String(a.id).localeCompare(String(b.id)));
+      } catch (err) {
+        console.error(err);
+        this.userMessage = 'Failed to load users';
+        this.users = [];
+      }
+    },
+    async removeUser(u) {
+      if (!u || !u.id) return;
+      if (!confirm(`Delete user ${u.name || u.email || u.id}?`)) return;
+      const base = 'http://localhost:3000';
+      const role = String(u.role || '').toLowerCase();
+      const coll = role === 'admin' ? 'admins' : 'customers';
+      try {
+        // Try direct delete by id first
+        let res = await fetch(`${base}/${coll}/${encodeURIComponent(u.id)}`, { method: 'DELETE' });
+        if (!res.ok) {
+          // Fallback: find by email then delete by numeric id if present
+          const q = await fetch(`${base}/${coll}?email=${encodeURIComponent(u.email || '')}`);
+          if (q.ok) {
+            const arr = await q.json();
+            if (Array.isArray(arr) && arr.length > 0 && arr[0].id != null) {
+              res = await fetch(`${base}/${coll}/${encodeURIComponent(arr[0].id)}`, { method: 'DELETE' });
+            }
+          }
+        }
+        if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
+        this.userMessage = `Deleted user ${u.email || u.id}`;
+        await this.loadUsers();
+      } catch (err) {
+        console.error(err);
+        this.userMessage = `Delete failed: ${err.message || err}`;
       }
     },
     computeImageSrc(p) {
@@ -126,6 +228,7 @@ export default {
   },
   mounted() {
     this.loadCatalog();
+    this.loadUsers();
   }
   ,
   watch: {
@@ -161,4 +264,13 @@ export default {
 .product-management { margin-bottom: 1rem; }
 .product-management summary { cursor: pointer; padding: 0.5rem 0.6rem; background:#f3f3f3; border-radius:6px; font-weight:600; }
 .product-management .management-contents { margin-top:0.75rem; padding:0.6rem; background:#fff; border:1px solid #eee; border-radius:6px; }
+
+/* User management */
+.user-management { margin-bottom: 1rem; }
+.user-management summary { cursor: pointer; padding: 0.5rem 0.6rem; background:#f3f3f3; border-radius:6px; font-weight:600; }
+.user-management .management-contents { margin-top:0.75rem; padding:0.6rem; background:#fff; border:1px solid #eee; border-radius:6px; }
+.toolbar { display:flex; gap:0.5rem; align-items:center; margin-bottom:0.5rem; }
+.user-list { list-style:none; padding:0; display:grid; gap:0.6rem; grid-template-columns: repeat(auto-fill,minmax(420px,1fr)); }
+.user-item { display:flex; gap:0.6rem; padding:0.6rem; border:1px solid #eee; border-radius:6px; background:#fff; }
+.empty { color:#777; font-style:italic; }
 </style>
