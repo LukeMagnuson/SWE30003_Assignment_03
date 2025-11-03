@@ -9,6 +9,7 @@
         <router-link to="/">Home</router-link>
         <router-link to="/shop">Shop</router-link>
         <router-link to="/about">About</router-link>
+        <router-link v-if="isLoggedIn" to="/profile">Profile</router-link>
         <router-link to="/login">Login</router-link>
         <router-link v-if="isAdmin" to="/admin">Admin</router-link>
       </nav>
@@ -23,6 +24,7 @@ import auth from '../models/AuthenticationService';
 
 const STORAGE_KEY = 'auth_token';
 const isAdmin = ref(false);
+const isLoggedIn = ref(false);
 let pollTimer = null;
 
 function updateRole() {
@@ -33,8 +35,10 @@ function updateRole() {
   }
   try {
     const user = auth.validateSession(token);
+    isLoggedIn.value = !!user;
     isAdmin.value = !!(user && (user.getRole && user.getRole() === 'Admin'));
   } catch (e) {
+    isLoggedIn.value = false;
     isAdmin.value = false;
   }
 }

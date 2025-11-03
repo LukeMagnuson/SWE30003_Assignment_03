@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '../pages/HomePage.vue';
 import AboutPage from '../pages/AboutPage.vue';
 import Test from '../pages/Test.vue';
+import ProfilePage from '../pages/ProfilePage.vue';
 import SiteHeader from '../components/SiteHeader.vue';
 import SiteFooter from '../components/SiteFooter.vue';
 import ShopView from '../components/ShopView.vue';
@@ -16,6 +17,7 @@ const routes = [
   { path: '/test', component: Test },
   { path: '/shop', component: ShopView },
   { path: '/login', component: LoginAdmin },
+  { path: '/profile', component: ProfilePage, meta: { requiresAuth: true } },
   // mark admin route with a meta flag
   { path: '/admin', component: AdminDashboard, meta: { requiresAdmin: true } }
 ];
@@ -41,6 +43,16 @@ router.beforeEach((to, from, next) => {
       console.warn(new UnauthorisedAccessError('Unauthorised access attempt to admin route'));
     }
     return next({ path: '/', query: { unauthorised: 'true' } });
+  }
+  if (to.meta && to.meta.requiresAuth) {
+    const token = localStorage.getItem('auth_token');
+    try {
+      if (!token) throw new UnauthorisedAccessError('No session token');
+      auth.validateSession(token);
+      return next();
+    } catch (err) {
+      return next({ path: '/login', query: { unauthorised: 'true' } });
+    }
   }
   return next();
 });

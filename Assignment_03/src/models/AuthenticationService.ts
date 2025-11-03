@@ -228,21 +228,6 @@ export class AuthenticationService {
       console.warn('Failed to load auth state', e);
     }
   }
-
-  // For demo/testing: seed an admin and a customer if none exist
-  seedIfEmpty() {
-    if (this.usersById.size === 0) {
-      const admin = this.registerUser('admin', 'admin-1', 'Store Admin', 'admin@store.test', 'adminpass', {
-        permissions: ['catalog:write', 'orders:manage', 'reports:view']
-      });
-      const cust = this.registerUser('customer', 'cust-1', 'Demo Customer', 'customer@store.test', 'custpass', {
-        deliveryAddress: '123 Demo St'
-      });
-      // no session created automatically
-      // eslint-disable-next-line no-console
-      console.info('AuthenticationService seeded demo users:', admin.userId, cust.userId);
-    }
-  }
 }
 
 // default export for convenience
