@@ -17,7 +17,6 @@
         </div>
       </form>
       <p class="message" v-if="message">{{ message }}</p>
-      <p class="hint">Demo accounts (from seeded AuthenticationService): admin@store.test / adminpass</p>
 
       <hr />
       <details class="register">

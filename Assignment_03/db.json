@@ -1,14 +1,27 @@
 {
-  "admins": [],
+  "admins": [
+    {
+      "id": "admin-1",
+      "name": "Test Admin",
+      "email": "admin@email.com",
+      "phone": "0411111111",
+      "role": "Admin",
+      "createdAt": "2025-11-03T21:07:45.793Z",
+      "permissions": [
+        "catalog:write"
+      ],
+      "password": "password"
+    }
+  ],
   "customers": [
     {
       "id": "cust-1",
-      "name": "john",
-      "email": "john@email.com",
+      "name": "Test Customer",
+      "email": "testcustomer@email.com",
       "phone": "0412345678",
       "role": "Customer",
-      "createdAt": "2025-11-03T20:56:29.546Z",
-      "deliveryAddress": "123 main st",
+      "createdAt": "2025-11-03T21:07:15.075Z",
+      "deliveryAddress": "123 Main St",
       "password": "password"
     }
   ],
@@ -19,7 +32,7 @@
     },
     {
       "id": "admin",
-      "next": 1
+      "next": 2
     }
   ],
   "products": [
