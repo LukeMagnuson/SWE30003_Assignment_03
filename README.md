@@ -12,7 +12,7 @@ Step 3:
 Open the repository in VSCode, or preferred editor (or simply extract repo and cd/ into with CMD.)
 
 Step 4:
-in the terminal, use the command 'npm install' to install the needed packages.
+Change directory via CMD into Assignment_03.
 
 Step 5:
 In the terminal, run this set of commands.
