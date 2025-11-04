@@ -3,7 +3,11 @@
     <h1>Catalogue</h1>
 
     <!-- Search -->
-    <input v-model="searchTerm" placeholder="Search products..." class="search" />
+      <!-- Search / Controls -->
+      <div class="toolbar">
+        <input v-model="searchTerm" placeholder="Search products..." class="search" />
+        <button class="secondary" @click="reloadFromApi" :disabled="loading">{{ loading ? 'Refreshing…' : 'Refresh' }}</button>
+      </div>
 
     <!-- Product grid -->
     <ul class="product-list">
@@ -80,6 +84,10 @@ export default {
       quantities: {},
       showDetails: false,
       selectedProduct: null,
+      apiUrl: 'http://localhost:3000/products',
+      loading: false,
+      autoRefreshMs: 10000,
+      _refreshTimer: null
     };
   },
   computed: {
@@ -103,6 +111,18 @@ export default {
     closeDetails() {
       this.showDetails = false;
       this.selectedProduct = null;
+    },
+    async reloadFromApi() {
+      if (!this.apiUrl) return;
+      this.loading = true;
+      try {
+        this.catalogue = await ProductCatalogue.loadFromUrl(this.apiUrl);
+      } catch (e) {
+        console.error('Failed to load catalogue from API', e);
+      } finally {
+        this.loading = false;
+        this.$nextTick(() => this.recalcItemsPerPage());
+      }
     },
     nextPage() { if (this.currentPage < this.totalPages) this.currentPage++; },
     prevPage() { if (this.currentPage > 1) this.currentPage--; },
@@ -182,25 +202,8 @@ export default {
     searchTerm() { this.currentPage = 1; }
   },
   async mounted() {
-    // Try a set of likely locations for the static JSON file so the view works
-    // whether the app is served by Vite dev server or via a built /dist.
-    // Try db.json first (the app's JSON database), then the legacy shop.json locations.
-    const candidates = ['/db.json', 'db.json', './db.json', '/data/shop.json', 'data/shop.json', './data/shop.json', '/public/data/shop.json'];
-    let loaded = false;
-    for (const url of candidates) {
-      try {
-        this.catalogue = await ProductCatalogue.loadFromUrl(url);
-        console.info('Loaded product catalogue from:', url);
-        loaded = true;
-        break;
-      } catch (err) {
-        console.debug('Failed to load from', url, err && err.message ? err.message : err);
-      }
-    }
-    if (!loaded) {
-      console.error('Failed to load product data from any candidate URL, using empty catalogue');
-      this.catalogue = new ProductCatalogue([]);
-    }
+    // Load from live API for up-to-date stock visibility
+    await this.reloadFromApi();
 
     // After catalogue is set and DOM rendered, calculate items per page and listen for resizes
     this.$nextTick(() => {
@@ -209,12 +212,24 @@ export default {
     this._onResize = () => this.recalcItemsPerPage();
     window.addEventListener('resize', this._onResize);
     window.addEventListener('orientationchange', this._onResize);
+
+    // Set up light auto-refresh to reflect stock changes (e.g., after checkouts)
+    if (this.autoRefreshMs && Number.isFinite(this.autoRefreshMs) && this.autoRefreshMs > 0) {
+      this._refreshTimer = setInterval(() => {
+        // Keep same page and searchTerm; just refresh data
+        this.reloadFromApi();
+      }, this.autoRefreshMs);
+    }
   }
   ,
   beforeUnmount() {
     if (this._onResize) {
       window.removeEventListener('resize', this._onResize);
       window.removeEventListener('orientationchange', this._onResize);
+    }
+    if (this._refreshTimer) {
+      clearInterval(this._refreshTimer);
+      this._refreshTimer = null;
     }
   }
 };
@@ -237,13 +252,8 @@ export default {
 }
 .admin .row { display:flex; gap:0.5rem; margin-bottom:0.5rem; }
 .admin input, .admin textarea { flex:1; padding:0.4rem; }
-.search {
-  display:block;
-  margin: 0 0 1rem 0;
-  padding: 0.5rem;
-  width: 100%;
-  box-sizing: border-box;
-}
+.toolbar { display:flex; gap:0.5rem; align-items:center; margin-bottom:1rem; }
+.search { flex:1; }
 .product-list {
   list-style: none;
   padding: 0 1rem; /* keep a little horizontal padding from the viewport edges */

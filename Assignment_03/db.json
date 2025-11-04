@@ -43,7 +43,8 @@
       "category": "Dairy",
       "priceCents": 249,
       "inventory_count": 48,
-      "imageUrl": "/images/milk-1l.jpg"
+      "imageUrl": "/images/milk-1l.jpg",
+      "id": "9073"
     },
     {
       "productId": "SKU-002",
@@ -52,7 +53,8 @@
       "category": "Bakery",
       "priceCents": 349,
       "inventory_count": 30,
-      "imageUrl": "/images/bread-wholemeal.jpg"
+      "imageUrl": "/images/bread-wholemeal.jpg",
+      "id": "aa50"
     },
     {
       "productId": "SKU-003",
@@ -60,8 +62,9 @@
       "description": "Dozen free-range eggs.",
       "category": "Dairy",
       "priceCents": 599,
-      "inventory_count": 22,
-      "imageUrl": "/images/eggs-12.jpg"
+      "inventory_count": 21,
+      "imageUrl": "/images/eggs-12.jpg",
+      "id": "9b03"
     },
     {
       "productId": "SKU-004",
@@ -70,7 +73,8 @@
       "category": "Beverages",
       "priceCents": 1299,
       "inventory_count": 14,
-      "imageUrl": "/images/coffee-250g.jpg"
+      "imageUrl": "/images/coffee-250g.jpg",
+      "id": "b95b"
     },
     {
       "productId": "SKU-005",
@@ -79,7 +83,8 @@
       "category": "Pantry",
       "priceCents": 399,
       "inventory_count": 40,
-      "imageUrl": "/images/sugar-1kg.jpg"
+      "imageUrl": "/images/sugar-1kg.jpg",
+      "id": "fe10"
     },
     {
       "productId": "SKU-006",
@@ -88,7 +93,8 @@
       "category": "Dairy",
       "priceCents": 549,
       "inventory_count": 18,
-      "imageUrl": "/images/butter-250g.jpg"
+      "imageUrl": "/images/butter-250g.jpg",
+      "id": "3cd8"
     },
     {
       "productId": "SKU-007",
@@ -97,7 +103,8 @@
       "category": "Dairy",
       "priceCents": 799,
       "inventory_count": 16,
-      "imageUrl": "/images/cheddar-200g.jpg"
+      "imageUrl": "/images/cheddar-200g.jpg",
+      "id": "0a2c"
     },
     {
       "productId": "SKU-008",
@@ -106,7 +113,8 @@
       "category": "Beverages",
       "priceCents": 499,
       "inventory_count": 26,
-      "imageUrl": "/images/oj-1l.jpg"
+      "imageUrl": "/images/oj-1l.jpg",
+      "id": "6a7e"
     },
     {
       "productId": "SKU-009",
@@ -115,7 +123,8 @@
       "category": "Confectionery",
       "priceCents": 199,
       "inventory_count": 120,
-      "imageUrl": "/images/choc-50g.jpg"
+      "imageUrl": "/images/choc-50g.jpg",
+      "id": "7bdd"
     },
     {
       "productId": "SKU-010",
@@ -124,7 +133,8 @@
       "category": "Snacks",
       "priceCents": 299,
       "inventory_count": 70,
-      "imageUrl": "/images/chips-150g.jpg"
+      "imageUrl": "/images/chips-150g.jpg",
+      "id": "fd1c"
     },
     {
       "productId": "SKU-011",
@@ -133,7 +143,8 @@
       "category": "Pantry",
       "priceCents": 699,
       "inventory_count": 25,
-      "imageUrl": "/images/cereal-500g.jpg"
+      "imageUrl": "/images/cereal-500g.jpg",
+      "id": "b2ee"
     },
     {
       "productId": "SKU-012",
@@ -142,7 +153,8 @@
       "category": "Dairy",
       "priceCents": 149,
       "inventory_count": 80,
-      "imageUrl": "/images/yoghurt-150g.jpg"
+      "imageUrl": "/images/yoghurt-150g.jpg",
+      "id": "8a23"
     },
     {
       "productId": "SKU-013",
@@ -151,7 +163,8 @@
       "category": "Produce",
       "priceCents": 399,
       "inventory_count": 35,
-      "imageUrl": "/images/bananas-kg.jpg"
+      "imageUrl": "/images/bananas-kg.jpg",
+      "id": "f880"
     },
     {
       "productId": "SKU-014",
@@ -160,7 +173,8 @@
       "category": "Produce",
       "priceCents": 499,
       "inventory_count": 28,
-      "imageUrl": "/images/apples-pack.jpg"
+      "imageUrl": "/images/apples-pack.jpg",
+      "id": "0853"
     },
     {
       "productId": "SKU-015",
@@ -169,7 +183,8 @@
       "category": "Toiletries",
       "priceCents": 699,
       "inventory_count": 34,
-      "imageUrl": "/images/shampoo-400ml.jpg"
+      "imageUrl": "/images/shampoo-400ml.jpg",
+      "id": "1c79"
     },
     {
       "productId": "SKU-016",
@@ -178,7 +193,8 @@
       "category": "Toiletries",
       "priceCents": 249,
       "inventory_count": 50,
-      "imageUrl": "/images/soap-250ml.jpg"
+      "imageUrl": "/images/soap-250ml.jpg",
+      "id": "65ea"
     },
     {
       "productId": "SKU-017",
@@ -187,7 +203,8 @@
       "category": "Toiletries",
       "priceCents": 399,
       "inventory_count": 40,
-      "imageUrl": "/images/toothpaste-120g.jpg"
+      "imageUrl": "/images/toothpaste-120g.jpg",
+      "id": "df51"
     },
     {
       "productId": "SKU-018",
@@ -196,7 +213,8 @@
       "category": "Household",
       "priceCents": 599,
       "inventory_count": 60,
-      "imageUrl": "/images/batteries-aa-4.jpg"
+      "imageUrl": "/images/batteries-aa-4.jpg",
+      "id": "bfe3"
     },
     {
       "productId": "SKU-019",
@@ -205,7 +223,8 @@
       "category": "Beverages",
       "priceCents": 299,
       "inventory_count": 90,
-      "imageUrl": "/images/energy-330ml.jpg"
+      "imageUrl": "/images/energy-330ml.jpg",
+      "id": "c676"
     },
     {
       "productId": "SKU-020",
@@ -214,7 +233,8 @@
       "category": "Beverages",
       "priceCents": 149,
       "inventory_count": 200,
-      "imageUrl": "/images/water-600ml.jpg"
+      "imageUrl": "/images/water-600ml.jpg",
+      "id": "1ba9"
     },
     {
       "productId": "SKU-021",
@@ -223,7 +243,8 @@
       "category": "Frozen",
       "priceCents": 899,
       "inventory_count": 12,
-      "imageUrl": "/images/pizza-400g.jpg"
+      "imageUrl": "/images/pizza-400g.jpg",
+      "id": "e0a5"
     },
     {
       "productId": "SKU-022",
@@ -232,7 +253,8 @@
       "category": "Frozen",
       "priceCents": 699,
       "inventory_count": 10,
-      "imageUrl": "/images/icecream-1l.jpg"
+      "imageUrl": "/images/icecream-1l.jpg",
+      "id": "ff64"
     },
     {
       "productId": "SKU-023",
@@ -241,7 +263,8 @@
       "category": "Pantry",
       "priceCents": 299,
       "inventory_count": 45,
-      "imageUrl": "/images/pasta-500g.jpg"
+      "imageUrl": "/images/pasta-500g.jpg",
+      "id": "32ce"
     },
     {
       "productId": "SKU-024",
@@ -250,7 +273,8 @@
       "category": "Pantry",
       "priceCents": 499,
       "inventory_count": 36,
-      "imageUrl": "/images/pasta-sauce-500g.jpg"
+      "imageUrl": "/images/pasta-sauce-500g.jpg",
+      "id": "4573"
     }
   ],
   "orders": [
@@ -343,6 +367,31 @@
         "phone": "0412345678",
         "deliveryAddress": "Johnny's House"
       }
+    },
+    {
+      "id": "6d87",
+      "orderId": "ord-mhkigbrx-07drh",
+      "customerId": "guest",
+      "status": "Pending",
+      "createdAt": "2025-11-04T11:53:48.189Z",
+      "items": [
+        {
+          "productId": "SKU-003",
+          "name": "Free Range Eggs (12)",
+          "unitPriceCents": 599,
+          "quantity": 1,
+          "lineTotalCents": 599
+        }
+      ],
+      "subtotalCents": 599,
+      "gstCents": 60,
+      "totalCents": 659,
+      "customerContact": {
+        "name": "ddd",
+        "email": "dddd@email.com",
+        "phone": "dddd",
+        "deliveryAddress": "ddd"
+      }
     }
   ],
   "invoices": [
@@ -424,6 +473,27 @@
       "subtotalCents": 599,
       "gstCents": 60,
       "totalCents": 659
+    },
+    {
+      "id": "437d",
+      "invoiceId": "inv-mhkigbrx-u77",
+      "orderId": "ord-mhkigbrx-07drh",
+      "billingName": "ddd",
+      "billingAddress": "ddd",
+      "issuedAt": "2025-11-04T11:53:48.189Z",
+      "lines": [
+        {
+          "productId": "SKU-003",
+          "name": "Free Range Eggs (12)",
+          "unitPriceCents": 599,
+          "quantity": 1,
+          "lineTotalCents": 599,
+          "lineGstCents": 60
+        }
+      ],
+      "subtotalCents": 599,
+      "gstCents": 60,
+      "totalCents": 659
     }
   ],
   "payments": [
@@ -448,6 +518,14 @@
       "id": "2c1a",
       "paymentId": "pay-mhkgsu9s-jhh",
       "orderId": "ord-mhkgsu9s-i0guk",
+      "method": "Card",
+      "amountCents": 659,
+      "status": "Initiated"
+    },
+    {
+      "id": "8d8d",
+      "paymentId": "pay-mhkigbrx-b5t",
+      "orderId": "ord-mhkigbrx-07drh",
       "method": "Card",
       "amountCents": 659,
       "status": "Initiated"
