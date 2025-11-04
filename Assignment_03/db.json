@@ -42,6 +42,7 @@
   "products": [
     {
       "productId": "SKU-001",
+      "id": "SKU-001",
       "name": "Fresh Milk 1L",
       "description": "Full cream Australian milk, 1 litre carton.",
       "category": "Dairy",
@@ -51,6 +52,7 @@
     },
     {
       "productId": "SKU-002",
+      "id": "SKU-002",
       "name": "Wholemeal Bread",
       "description": "Freshly baked wholemeal loaf, 700g.",
       "category": "Bakery",
@@ -60,6 +62,7 @@
     },
     {
       "productId": "SKU-003",
+      "id": "SKU-003",
       "name": "Free Range Eggs (12)",
       "description": "Dozen free-range eggs.",
       "category": "Dairy",
@@ -69,6 +72,7 @@
     },
     {
       "productId": "SKU-004",
+      "id": "SKU-004",
       "name": "Ground Coffee 250g",
       "description": "Medium roast ground coffee, 250g pack.",
       "category": "Beverages",
@@ -78,6 +82,7 @@
     },
     {
       "productId": "SKU-005",
+      "id": "SKU-005",
       "name": "Granulated Sugar 1kg",
       "description": "Refined granulated sugar, 1 kilogram.",
       "category": "Pantry",
@@ -87,6 +92,7 @@
     },
     {
       "productId": "SKU-006",
+      "id": "SKU-006",
       "name": "Unsalted Butter 250g",
       "description": "Creamy unsalted butter, 250g block.",
       "category": "Dairy",
@@ -96,6 +102,7 @@
     },
     {
       "productId": "SKU-007",
+      "id": "SKU-007",
       "name": "Cheddar Cheese 200g",
       "description": "Mature cheddar block, 200g.",
       "category": "Dairy",
@@ -105,6 +112,7 @@
     },
     {
       "productId": "SKU-008",
+      "id": "SKU-008",
       "name": "Orange Juice 1L",
       "description": "Freshly squeezed style orange juice, 1 litre.",
       "category": "Beverages",
@@ -114,6 +122,7 @@
     },
     {
       "productId": "SKU-009",
+      "id": "SKU-009",
       "name": "Chocolate Bar 50g",
       "description": "Milk chocolate bar, 50g.",
       "category": "Confectionery",
@@ -123,6 +132,7 @@
     },
     {
       "productId": "SKU-010",
+      "id": "SKU-010",
       "name": "Potato Chips 150g",
       "description": "Crispy salted potato chips, 150g bag.",
       "category": "Snacks",
@@ -132,6 +142,7 @@
     },
     {
       "productId": "SKU-011",
+      "id": "SKU-011",
       "name": "Breakfast Cereal 500g",
       "description": "Whole grain breakfast cereal, 500g box.",
       "category": "Pantry",
@@ -141,6 +152,7 @@
     },
     {
       "productId": "SKU-012",
+      "id": "SKU-012",
       "name": "Yoghurt Natural 150g",
       "description": "Natural yogurt pot, 150g.",
       "category": "Dairy",
@@ -150,6 +162,7 @@
     },
     {
       "productId": "SKU-013",
+      "id": "SKU-013",
       "name": "Bananas (per kg)",
       "description": "Fresh bananas sold per kilogram.",
       "category": "Produce",
@@ -159,6 +172,7 @@
     },
     {
       "productId": "SKU-014",
+      "id": "SKU-014",
       "name": "Gala Apples (pack)",
       "description": "Pack of 4 Gala apples.",
       "category": "Produce",
@@ -168,6 +182,7 @@
     },
     {
       "productId": "SKU-015",
+      "id": "SKU-015",
       "name": "Shampoo 400mL",
       "description": "Daily care shampoo, 400mL bottle.",
       "category": "Toiletries",
@@ -177,6 +192,7 @@
     },
     {
       "productId": "SKU-016",
+      "id": "SKU-016",
       "name": "Hand Soap 250mL",
       "description": "Liquid hand soap, 250mL pump bottle.",
       "category": "Toiletries",
@@ -186,6 +202,7 @@
     },
     {
       "productId": "SKU-017",
+      "id": "SKU-017",
       "name": "Toothpaste 120g",
       "description": "Fluoride toothpaste, 120g tube.",
       "category": "Toiletries",
@@ -195,6 +212,7 @@
     },
     {
       "productId": "SKU-018",
+      "id": "SKU-018",
       "name": "AA Batteries (4 pack)",
       "description": "Alkaline AA batteries, 4 pack.",
       "category": "Household",
@@ -204,6 +222,7 @@
     },
     {
       "productId": "SKU-019",
+      "id": "SKU-019",
       "name": "Energy Drink 330mL",
       "description": "Caffeinated energy drink, 330mL can.",
       "category": "Beverages",
@@ -213,6 +232,7 @@
     },
     {
       "productId": "SKU-020",
+      "id": "SKU-020",
       "name": "Bottled Water 600mL",
       "description": "Still drinking water, 600mL bottle.",
       "category": "Beverages",
@@ -222,6 +242,7 @@
     },
     {
       "productId": "SKU-021",
+      "id": "SKU-021",
       "name": "Frozen Pizza 400g",
       "description": "Stone-baked style frozen pizza, 400g.",
       "category": "Frozen",
@@ -231,6 +252,7 @@
     },
     {
       "productId": "SKU-022",
+      "id": "SKU-022",
       "name": "Ice Cream Tub 1L",
       "description": "Vanilla ice cream tub, 1 litre.",
       "category": "Frozen",
@@ -240,6 +262,7 @@
     },
     {
       "productId": "SKU-023",
+      "id": "SKU-023",
       "name": "Spaghetti Pasta 500g",
       "description": "Durum wheat spaghetti, 500g pack.",
       "category": "Pantry",
@@ -249,6 +272,7 @@
     },
     {
       "productId": "SKU-024",
+      "id": "SKU-024",
       "name": "Pasta Sauce 500g",
       "description": "Tomato and basil pasta sauce, 500g jar.",
       "category": "Pantry",
@@ -257,12 +281,12 @@
       "imageUrl": "/images/pasta-sauce-500g.jpg"
     },
     {
-      "id": "32d6",
-      "name": "Clothes Pegs 24pk",
-      "price": 6,
-      "inventory_count": 30,
-      "category": "Clothing",
-      "description": "Multi-coloured clothes pegs for washing and drying",
+      "id": "SKU-025",
+      "name": "Prepaid SIM Card (20GB)",
+      "price": 25,
+      "inventory_count": 20,
+      "category": "Technology",
+      "description": "Prepaid SIM card with 20GB with calls and text.",
       "productId": "SKU-025"
     }
   ],

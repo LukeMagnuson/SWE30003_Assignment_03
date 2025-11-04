@@ -366,8 +366,8 @@ export default {
       const apiUrl = 'http://localhost:3000/products';
       try {
         // Generate next SKU automatically
-        const sku = await this.claimNextSku();
-        const payload = { ...dto, productId: sku };
+  const sku = await this.claimNextSku();
+  const payload = { ...dto, productId: sku, id: sku };
         const res = await fetch(apiUrl, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
         if (!res.ok) throw new Error('Server returned ' + res.status);
         await this.loadCatalog();
