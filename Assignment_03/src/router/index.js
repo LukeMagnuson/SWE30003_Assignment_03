@@ -3,6 +3,7 @@ import HomePage from '../pages/HomePage.vue';
 import AboutPage from '../pages/AboutPage.vue';
 import Test from '../pages/Test.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
+import ShoppingCartPage from '../pages/ShoppingCartPage.vue';
 import SiteHeader from '../components/SiteHeader.vue';
 import SiteFooter from '../components/SiteFooter.vue';
 import ShopView from '../components/ShopView.vue';
@@ -16,6 +17,7 @@ const routes = [
   { path: '/about', component: AboutPage },
   { path: '/test', component: Test },
   { path: '/shop', component: ShopView },
+  { path: '/cart', component: ShoppingCartPage },
   { path: '/login', component: LoginAdmin },
   { path: '/profile', component: ProfilePage, meta: { requiresAuth: true } },
   // mark admin route with a meta flag

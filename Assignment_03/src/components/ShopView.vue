@@ -21,7 +21,22 @@
             <span class="stock">Stock: <b>{{ shopItem.quantityAvailable }}</b></span>
             <span class="price">Price: ${{ (shopItem.priceCents / 100).toFixed(2) }}</span>
           </div>
-          
+          <div class="product-actions">
+            <input
+              class="qty"
+              type="number"
+              min="1"
+              :max="shopItem.quantityAvailable"
+              :disabled="shopItem.quantityAvailable === 0"
+              v-model.number="quantities[shopItem.productId]"
+            />
+            <button
+              @click="addToCart(shopItem)"
+              :disabled="shopItem.quantityAvailable === 0"
+            >
+              {{ shopItem.quantityAvailable === 0 ? 'Out of stock' : 'Add to cart' }}
+            </button>
+          </div>
         </div>
       </li>
     </ul>
@@ -37,6 +52,7 @@
 
 <script>
 import ProductCatalogue from '../models/ProductCatalogue';
+import cart from '../stores/cart';
 
 export default {
   data() {
@@ -46,6 +62,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 8,
       placeholder: '/images/Supa_Team_4.jpg',
+      quantities: {},
     };
   },
   computed: {
@@ -116,6 +133,23 @@ export default {
         e.target.onerror = null;
         e.target.src = this.placeholder;
       }
+    },
+
+    addToCart(product) {
+      const max = product.quantityAvailable;
+      const desired = Math.max(1, Math.floor(this.quantities[product.productId] ?? 1));
+      const qty = Math.min(desired, max);
+      try {
+        cart.addProduct(product, qty);
+        // reset to 1 after add
+        this.setQty(product.productId, 1);
+      } catch (e) {
+        alert(e && e.message ? e.message : String(e));
+      }
+    },
+
+    setQty(productId, value) {
+      this.quantities[productId] = value;
     }
   },
   
@@ -240,6 +274,8 @@ export default {
   align-items: center;
 }
 .product-actions { margin-top: 0.25rem; }
+.product-actions { display:flex; gap:0.5rem; align-items:center; }
+.product-actions .qty { width: 64px; padding: 4px; }
 .pagination { margin-top: 1rem; display:flex; gap:1rem; align-items:center; }
 .admin-message { color: #064; margin-top: 0.5rem; }
 </style>

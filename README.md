@@ -1,21 +1,29 @@
 "# SWE30003_Assignment_03" 
 
-Step 0:
-download the repo.
+Setup -
 
 Step 1:
-download and install Node.js
+Download the repository
 
 Step 2:
-open the repo in vsCode, or preferred editor
+Download and install Node.js
 
 Step 3:
-open a terminal, and navigate to the Assignment_03 folder
+Open the repository in VSCode, or preferred editor (or simply extract repo and cd/ into with CMD.)
 
 Step 4:
 in the terminal, use the command 'npm install' to install the needed packages.
 
 Step 5:
-in the terminal, use the command 'npm run dev' to start the local dev server. You should be able to access this at 'http://localhost:5173/'
+In the terminal, run this set of commands.
+ 1. npm install
+ 2. json-server --watch db.json
+ 3. npm run dev
+Ctrl-click the "http://localhost." link to view the website.
 
+User Activities -
+
+Browsing:
+ 1. Click on the shop tab in the header to browse the available products in the catalogue.
+ 2. 
 

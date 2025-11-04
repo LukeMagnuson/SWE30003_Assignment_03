@@ -8,6 +8,7 @@
       <nav>
         <router-link to="/">Home</router-link>
         <router-link to="/shop">Shop</router-link>
+        <router-link to="/cart">Cart<span v-if="itemCount > 0" class="badge">{{ itemCount }}</span></router-link>
         <router-link to="/about">About</router-link>
         <router-link v-if="isLoggedIn" to="/profile">Profile</router-link>
         <router-link to="/login">Login</router-link>
@@ -18,14 +19,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import logo from '../../images/YLSLogo.png';
 import auth from '../models/AuthenticationService';
+import cart from '../stores/cart';
 
 const STORAGE_KEY = 'auth_token';
 const isAdmin = ref(false);
 const isLoggedIn = ref(false);
 let pollTimer = null;
+const itemCount = computed(() => cart.itemCount.value);
 
 function updateRole() {
   const token = localStorage.getItem(STORAGE_KEY);
@@ -104,6 +107,15 @@ nav a {
   text-decoration: none;
   padding: 6px 10px;
   border-radius: 4px;
+}
+
+.badge {
+  margin-left: 6px;
+  background: #e33;
+  color: white;
+  border-radius: 999px;
+  padding: 0 6px;
+  font-size: 0.8rem;
 }
 
 nav a:hover {
