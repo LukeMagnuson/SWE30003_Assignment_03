@@ -92,6 +92,9 @@
               <div class="cust">{{ o.customerContact?.name || o.customerId }}</div>
               <div class="total">${{ (o.totalCents/100).toFixed(2) }}</div>
             </div>
+            <div class="row3">
+              <button class="danger" @click="cancelOrder(o)" :disabled="busyOrderId===o.orderId">Cancel order</button>
+            </div>
           </li>
         </ul>
         <div v-if="orders.length===0" class="empty">No orders found.</div>
@@ -127,7 +130,8 @@ export default {
   selectedProduct: null,
       // orders state
       orders: [],
-      ordersMessage: ''
+      ordersMessage: '',
+      busyOrderId: ''
     };
   },
   computed: {
@@ -221,6 +225,52 @@ export default {
         console.error(err);
         this.orders = [];
         this.ordersMessage = 'Failed to load orders';
+      }
+    },
+    async cancelOrder(o) {
+      if (!o) return;
+      if (!confirm(`Cancel order #${o.orderId}? This will remove the order. If the payment is not completed yet, it will be deleted as well.`)) return;
+      this.ordersMessage = '';
+      this.busyOrderId = o.orderId;
+      const base = 'http://localhost:3000';
+      try {
+        // Delete payment if still Initiated/Pending
+        let pay = o.payment;
+        if (!pay) {
+          const pRes = await fetch(`${base}/payments?orderId=${encodeURIComponent(o.orderId)}`);
+          if (pRes.ok) {
+            const arr = await pRes.json();
+            pay = Array.isArray(arr) ? arr[0] : null;
+          }
+        }
+        if (pay && (pay.status === 'Initiated' || pay.status === 'Pending')) {
+          let payId = pay.id ?? pay.paymentId;
+          if (payId == null) {
+            // Fallback lookup by orderId already done; skip deletion if we don't have an id
+          } else {
+            await fetch(`${base}/payments/${encodeURIComponent(payId)}`, { method: 'DELETE' });
+          }
+        }
+
+        // Delete order
+        let ordId = o.id ?? null;
+        if (ordId == null) {
+          const oRes = await fetch(`${base}/orders?orderId=${encodeURIComponent(o.orderId)}`);
+          if (oRes.ok) {
+            const arr = await oRes.json();
+            if (Array.isArray(arr) && arr[0] && arr[0].id != null) ordId = arr[0].id;
+          }
+        }
+        if (ordId == null) throw new Error('Order record id not found');
+        const del = await fetch(`${base}/orders/${encodeURIComponent(ordId)}`, { method: 'DELETE' });
+        if (!del.ok) throw new Error('Failed to delete order');
+        this.ordersMessage = `Cancelled order ${o.orderId}`;
+        await this.loadOrders();
+      } catch (err) {
+        console.error(err);
+        this.ordersMessage = `Cancel failed: ${err.message || err}`;
+      } finally {
+        this.busyOrderId = '';
       }
     },
     async removeUser(u) {
