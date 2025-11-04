@@ -252,5 +252,205 @@
       "inventory_count": 36,
       "imageUrl": "/images/pasta-sauce-500g.jpg"
     }
+  ],
+  "orders": [
+    {
+      "id": "255a",
+      "orderId": "ord-mhkgm8l5-bu4jv",
+      "customerId": "cust-2",
+      "status": "Paid",
+      "createdAt": "2025-11-04T11:02:24.761Z",
+      "items": [
+        {
+          "productId": "SKU-002",
+          "name": "Wholemeal Bread",
+          "unitPriceCents": 349,
+          "quantity": 1,
+          "lineTotalCents": 349
+        },
+        {
+          "productId": "SKU-003",
+          "name": "Free Range Eggs (12)",
+          "unitPriceCents": 599,
+          "quantity": 1,
+          "lineTotalCents": 599
+        },
+        {
+          "productId": "SKU-007",
+          "name": "Cheddar Cheese 200g",
+          "unitPriceCents": 799,
+          "quantity": 1,
+          "lineTotalCents": 799
+        }
+      ],
+      "subtotalCents": 1747,
+      "gstCents": 175,
+      "totalCents": 1922,
+      "customerContact": {
+        "name": "Test Customer",
+        "email": "testcustomer@email.com",
+        "phone": "0412345678",
+        "deliveryAddress": "123 Main St"
+      },
+      "paidAt": "2025-11-04T11:03:05.028Z"
+    },
+    {
+      "id": "3ae8",
+      "orderId": "ord-mhkgow5y-qrzl6",
+      "customerId": "guest",
+      "status": "Pending",
+      "createdAt": "2025-11-04T11:04:28.630Z",
+      "items": [
+        {
+          "productId": "SKU-004",
+          "name": "Ground Coffee 250g",
+          "unitPriceCents": 1299,
+          "quantity": 1,
+          "lineTotalCents": 1299
+        }
+      ],
+      "subtotalCents": 1299,
+      "gstCents": 130,
+      "totalCents": 1429,
+      "customerContact": {
+        "name": "Admin",
+        "email": "admin@email.com",
+        "phone": "0411223344",
+        "deliveryAddress": "Admin St"
+      }
+    },
+    {
+      "id": "9771",
+      "orderId": "ord-mhkgsu9s-i0guk",
+      "customerId": "admin-1",
+      "status": "Pending",
+      "createdAt": "2025-11-04T11:07:32.800Z",
+      "items": [
+        {
+          "productId": "SKU-003",
+          "name": "Free Range Eggs (12)",
+          "unitPriceCents": 599,
+          "quantity": 1,
+          "lineTotalCents": 599
+        }
+      ],
+      "subtotalCents": 599,
+      "gstCents": 60,
+      "totalCents": 659,
+      "customerContact": {
+        "name": "Johnny Admin",
+        "email": "johnny@email.com",
+        "phone": "0412345678",
+        "deliveryAddress": "Johnny's House"
+      }
+    }
+  ],
+  "invoices": [
+    {
+      "id": "90e4",
+      "invoiceId": "inv-mhkgm8l5-54k",
+      "orderId": "ord-mhkgm8l5-bu4jv",
+      "billingName": "Test Customer",
+      "billingAddress": "123 Main St",
+      "issuedAt": "2025-11-04T11:02:24.761Z",
+      "lines": [
+        {
+          "productId": "SKU-002",
+          "name": "Wholemeal Bread",
+          "unitPriceCents": 349,
+          "quantity": 1,
+          "lineTotalCents": 349,
+          "lineGstCents": 35
+        },
+        {
+          "productId": "SKU-003",
+          "name": "Free Range Eggs (12)",
+          "unitPriceCents": 599,
+          "quantity": 1,
+          "lineTotalCents": 599,
+          "lineGstCents": 60
+        },
+        {
+          "productId": "SKU-007",
+          "name": "Cheddar Cheese 200g",
+          "unitPriceCents": 799,
+          "quantity": 1,
+          "lineTotalCents": 799,
+          "lineGstCents": 80
+        }
+      ],
+      "subtotalCents": 1747,
+      "gstCents": 175,
+      "totalCents": 1922
+    },
+    {
+      "id": "0f63",
+      "invoiceId": "inv-mhkgow5y-rnl",
+      "orderId": "ord-mhkgow5y-qrzl6",
+      "billingName": "Admin",
+      "billingAddress": "Admin St",
+      "issuedAt": "2025-11-04T11:04:28.630Z",
+      "lines": [
+        {
+          "productId": "SKU-004",
+          "name": "Ground Coffee 250g",
+          "unitPriceCents": 1299,
+          "quantity": 1,
+          "lineTotalCents": 1299,
+          "lineGstCents": 130
+        }
+      ],
+      "subtotalCents": 1299,
+      "gstCents": 130,
+      "totalCents": 1429
+    },
+    {
+      "id": "f7ff",
+      "invoiceId": "inv-mhkgsu9s-l5f",
+      "orderId": "ord-mhkgsu9s-i0guk",
+      "billingName": "Johnny Admin",
+      "billingAddress": "Johnny's House",
+      "issuedAt": "2025-11-04T11:07:32.800Z",
+      "lines": [
+        {
+          "productId": "SKU-003",
+          "name": "Free Range Eggs (12)",
+          "unitPriceCents": 599,
+          "quantity": 1,
+          "lineTotalCents": 599,
+          "lineGstCents": 60
+        }
+      ],
+      "subtotalCents": 599,
+      "gstCents": 60,
+      "totalCents": 659
+    }
+  ],
+  "payments": [
+    {
+      "id": "655b",
+      "paymentId": "pay-mhkgm8l5-sow",
+      "orderId": "ord-mhkgm8l5-bu4jv",
+      "method": "Card",
+      "amountCents": 1922,
+      "status": "Completed",
+      "processedAt": "2025-11-04T11:03:05.028Z"
+    },
+    {
+      "id": "f709",
+      "paymentId": "pay-mhkgow5y-hy6",
+      "orderId": "ord-mhkgow5y-qrzl6",
+      "method": "Card",
+      "amountCents": 1429,
+      "status": "Initiated"
+    },
+    {
+      "id": "2c1a",
+      "paymentId": "pay-mhkgsu9s-jhh",
+      "orderId": "ord-mhkgsu9s-i0guk",
+      "method": "Card",
+      "amountCents": 659,
+      "status": "Initiated"
+    }
   ]
 }

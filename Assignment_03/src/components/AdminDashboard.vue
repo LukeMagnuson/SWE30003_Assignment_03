@@ -68,6 +68,35 @@
       </div>
     </details>
 
+    <details class="order-management">
+      <summary>Order Management</summary>
+
+      <div class="management-contents">
+        <div class="toolbar">
+          <button @click="loadOrders">Refresh</button>
+        </div>
+        <p v-if="ordersMessage" class="message">{{ ordersMessage }}</p>
+        <ul class="order-list">
+          <li v-for="o in orders" :key="o.id || o.orderId" class="order-item">
+            <div class="row1">
+              <div>
+                <router-link :to="{ name: 'order', params: { orderId: o.orderId } }"><b>#{{ o.orderId }}</b></router-link>
+                <span class="muted"> • {{ formatDate(o.createdAt) }}</span>
+              </div>
+              <div>
+                <span class="badge" :class="`st-${o.status.toLowerCase()}`">{{ o.status }}</span>
+                <span class="badge" :class="`pay-${(o.payment?.status||'').toLowerCase()}`">Payment: {{ o.payment?.status || 'N/A' }}</span>
+              </div>
+            </div>
+            <div class="row2">
+              <div class="cust">{{ o.customerContact?.name || o.customerId }}</div>
+              <div class="total">${{ (o.totalCents/100).toFixed(2) }}</div>
+            </div>
+          </li>
+        </ul>
+        <div v-if="orders.length===0" class="empty">No orders found.</div>
+      </div>
+    </details>
     <!-- Product details overlay -->
     <ProductDetailsModal v-model="showDetails" :product="selectedProduct" @close="closeDetails" />
   </div>
@@ -94,8 +123,11 @@ export default {
       // form state moved to AddProductForm component
       placeholder: '/images/Supa_Team_4.jpg',
       // modal state
-      showDetails: false,
-      selectedProduct: null
+  showDetails: false,
+  selectedProduct: null,
+      // orders state
+      orders: [],
+      ordersMessage: ''
     };
   },
   computed: {
@@ -171,6 +203,24 @@ export default {
         console.error(err);
         this.userMessage = 'Failed to load users';
         this.users = [];
+      }
+    },
+    async loadOrders() {
+      this.ordersMessage = '';
+      try {
+        const base = 'http://localhost:3000';
+        const [oRes, pRes] = await Promise.all([
+          fetch(`${base}/orders`),
+          fetch(`${base}/payments`)
+        ]);
+        const os = oRes.ok ? await oRes.json() : [];
+        const ps = pRes.ok ? await pRes.json() : [];
+        const payByOrder = new Map(ps.map(p => [p.orderId, p]));
+        this.orders = os.map(o => ({ ...o, payment: payByOrder.get(o.orderId) }));
+      } catch (err) {
+        console.error(err);
+        this.orders = [];
+        this.ordersMessage = 'Failed to load orders';
       }
     },
     async removeUser(u) {
@@ -253,6 +303,7 @@ export default {
   mounted() {
     this.loadCatalog();
     this.loadUsers();
+    this.loadOrders();
   }
   ,
   watch: {
@@ -298,4 +349,18 @@ export default {
 .user-item { display:flex; gap:0.6rem; padding:0.6rem; border:1px solid #eee; border-radius:6px; background:#fff; }
 .empty { color:#777; font-style:italic; }
 .clickable { cursor: pointer; }
+
+/* Order management */
+.order-management { margin-bottom: 1rem; }
+.order-management summary { cursor: pointer; padding: 0.5rem 0.6rem; background:#f3f3f3; border-radius:6px; font-weight:600; }
+.order-management .management-contents { margin-top:0.75rem; padding:0.6rem; background:#fff; border:1px solid #eee; border-radius:6px; }
+.order-list { list-style:none; padding:0; display:grid; gap:0.6rem; }
+.order-item { display:flex; flex-direction:column; gap:0.25rem; padding:0.6rem; border:1px solid #eee; border-radius:6px; background:#fff; }
+.row1, .row2 { display:flex; justify-content:space-between; align-items:center; gap:0.5rem; }
+.muted { color:#6b7280; }
+.badge { display:inline-block; padding:0.15rem 0.4rem; border-radius:999px; font-size:0.8rem; background:#eef2ff; color:#3730a3; margin-left:0.25rem; }
+.badge.pay-completed { background:#ecfdf5; color:#065f46; }
+.badge.pay-initiated { background:#fff7ed; color:#9a3412; }
+.badge.st-pending { background:#fff7ed; color:#9a3412; }
+.badge.st-paid { background:#ecfdf5; color:#065f46; }
 </style>

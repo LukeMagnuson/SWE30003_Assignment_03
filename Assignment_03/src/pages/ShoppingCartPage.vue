@@ -123,27 +123,12 @@ export default {
       cart.removeProduct(productId);
     },
     async checkout() {
-      this.busy = true;
-      this.message = '';
-      try {
-        // Validate stock availability just-in-time; then reduce stock and clear cart
-        for (const line of this.itemsWithProducts) {
-          if (!line.product) throw new Error(`Product ${line.item.productId} no longer available`);
-          if (line.item.quantity > line.product.quantityAvailable) {
-            throw new Error(`Not enough stock for ${line.item.name}`);
-          }
-        }
-        // reduce stock
-        for (const line of this.itemsWithProducts) {
-          this.catalogue.reduceStock(line.item.productId, line.item.quantity);
-        }
-        cart.clear();
-        this.message = 'Checkout complete! Thank you.';
-      } catch (e) {
-        this.message = e && e.message ? e.message : String(e);
-      } finally {
-        this.busy = false;
+      // Navigate to the checkout page where user can fill in their details
+      if (this.items.length === 0) {
+        this.message = 'Your cart is empty.';
+        return;
       }
+      this.$router.push('/checkout');
     },
   },
   async mounted() {
