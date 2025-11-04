@@ -3,7 +3,6 @@
     <h2>Add Product</h2>
     <form @submit.prevent="submit">
       <div class="row">
-        <input v-model="form.productId" placeholder="productId (SKU)" required />
         <input v-model="form.name" placeholder="Name" required />
         <input v-model.number="form.price" type="number" step="0.01" placeholder="Price (AUD)" required />
         <input v-model.number="form.quantity" type="number" min="0" placeholder="Quantity" required />
@@ -29,7 +28,6 @@ export default {
   data() {
     return {
       form: {
-        productId: '',
         name: '',
         price: 0.0,
         quantity: 0,
@@ -42,7 +40,6 @@ export default {
   methods: {
     submit() {
       const dto = {
-        productId: this.form.productId,
         name: this.form.name,
         price: this.form.price,
         inventory_count: this.form.quantity,
@@ -53,7 +50,7 @@ export default {
       this.$emit('add', dto);
     },
     resetForm() {
-      this.form = { productId: '', name: '', price: 0.0, quantity: 0, category: '', imageUrl: '', description: '' };
+      this.form = { name: '', price: 0.0, quantity: 0, category: '', imageUrl: '', description: '' };
       this.$emit('reset');
     }
   }

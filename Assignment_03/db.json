@@ -33,6 +33,10 @@
     {
       "id": "admin",
       "next": 2
+    },
+    {
+      "id": "product",
+      "next": 26
     }
   ],
   "products": [
@@ -43,8 +47,7 @@
       "category": "Dairy",
       "priceCents": 249,
       "inventory_count": 48,
-      "imageUrl": "/images/milk-1l.jpg",
-      "id": "9073"
+      "imageUrl": "/images/milk-1l.jpg"
     },
     {
       "productId": "SKU-002",
@@ -53,8 +56,7 @@
       "category": "Bakery",
       "priceCents": 349,
       "inventory_count": 30,
-      "imageUrl": "/images/bread-wholemeal.jpg",
-      "id": "aa50"
+      "imageUrl": "/images/bread-wholemeal.jpg"
     },
     {
       "productId": "SKU-003",
@@ -63,8 +65,7 @@
       "category": "Dairy",
       "priceCents": 599,
       "inventory_count": 20,
-      "imageUrl": "/images/eggs-12.jpg",
-      "id": "9b03"
+      "imageUrl": "/images/eggs-12.jpg"
     },
     {
       "productId": "SKU-004",
@@ -73,8 +74,7 @@
       "category": "Beverages",
       "priceCents": 1299,
       "inventory_count": 14,
-      "imageUrl": "/images/coffee-250g.jpg",
-      "id": "b95b"
+      "imageUrl": "/images/coffee-250g.jpg"
     },
     {
       "productId": "SKU-005",
@@ -83,8 +83,7 @@
       "category": "Pantry",
       "priceCents": 399,
       "inventory_count": 40,
-      "imageUrl": "/images/sugar-1kg.jpg",
-      "id": "fe10"
+      "imageUrl": "/images/sugar-1kg.jpg"
     },
     {
       "productId": "SKU-006",
@@ -93,8 +92,7 @@
       "category": "Dairy",
       "priceCents": 549,
       "inventory_count": 18,
-      "imageUrl": "/images/butter-250g.jpg",
-      "id": "3cd8"
+      "imageUrl": "/images/butter-250g.jpg"
     },
     {
       "productId": "SKU-007",
@@ -103,8 +101,7 @@
       "category": "Dairy",
       "priceCents": 799,
       "inventory_count": 16,
-      "imageUrl": "/images/cheddar-200g.jpg",
-      "id": "0a2c"
+      "imageUrl": "/images/cheddar-200g.jpg"
     },
     {
       "productId": "SKU-008",
@@ -113,8 +110,7 @@
       "category": "Beverages",
       "priceCents": 499,
       "inventory_count": 26,
-      "imageUrl": "/images/oj-1l.jpg",
-      "id": "6a7e"
+      "imageUrl": "/images/oj-1l.jpg"
     },
     {
       "productId": "SKU-009",
@@ -123,8 +119,7 @@
       "category": "Confectionery",
       "priceCents": 199,
       "inventory_count": 120,
-      "imageUrl": "/images/choc-50g.jpg",
-      "id": "7bdd"
+      "imageUrl": "/images/choc-50g.jpg"
     },
     {
       "productId": "SKU-010",
@@ -133,8 +128,7 @@
       "category": "Snacks",
       "priceCents": 299,
       "inventory_count": 70,
-      "imageUrl": "/images/chips-150g.jpg",
-      "id": "fd1c"
+      "imageUrl": "/images/chips-150g.jpg"
     },
     {
       "productId": "SKU-011",
@@ -143,8 +137,7 @@
       "category": "Pantry",
       "priceCents": 699,
       "inventory_count": 25,
-      "imageUrl": "/images/cereal-500g.jpg",
-      "id": "b2ee"
+      "imageUrl": "/images/cereal-500g.jpg"
     },
     {
       "productId": "SKU-012",
@@ -153,8 +146,7 @@
       "category": "Dairy",
       "priceCents": 149,
       "inventory_count": 80,
-      "imageUrl": "/images/yoghurt-150g.jpg",
-      "id": "8a23"
+      "imageUrl": "/images/yoghurt-150g.jpg"
     },
     {
       "productId": "SKU-013",
@@ -163,8 +155,7 @@
       "category": "Produce",
       "priceCents": 399,
       "inventory_count": 35,
-      "imageUrl": "/images/bananas-kg.jpg",
-      "id": "f880"
+      "imageUrl": "/images/bananas-kg.jpg"
     },
     {
       "productId": "SKU-014",
@@ -173,8 +164,7 @@
       "category": "Produce",
       "priceCents": 499,
       "inventory_count": 28,
-      "imageUrl": "/images/apples-pack.jpg",
-      "id": "0853"
+      "imageUrl": "/images/apples-pack.jpg"
     },
     {
       "productId": "SKU-015",
@@ -183,8 +173,7 @@
       "category": "Toiletries",
       "priceCents": 699,
       "inventory_count": 34,
-      "imageUrl": "/images/shampoo-400ml.jpg",
-      "id": "1c79"
+      "imageUrl": "/images/shampoo-400ml.jpg"
     },
     {
       "productId": "SKU-016",
@@ -193,8 +182,7 @@
       "category": "Toiletries",
       "priceCents": 249,
       "inventory_count": 50,
-      "imageUrl": "/images/soap-250ml.jpg",
-      "id": "65ea"
+      "imageUrl": "/images/soap-250ml.jpg"
     },
     {
       "productId": "SKU-017",
@@ -203,8 +191,7 @@
       "category": "Toiletries",
       "priceCents": 399,
       "inventory_count": 40,
-      "imageUrl": "/images/toothpaste-120g.jpg",
-      "id": "df51"
+      "imageUrl": "/images/toothpaste-120g.jpg"
     },
     {
       "productId": "SKU-018",
@@ -213,8 +200,7 @@
       "category": "Household",
       "priceCents": 599,
       "inventory_count": 60,
-      "imageUrl": "/images/batteries-aa-4.jpg",
-      "id": "bfe3"
+      "imageUrl": "/images/batteries-aa-4.jpg"
     },
     {
       "productId": "SKU-019",
@@ -223,8 +209,7 @@
       "category": "Beverages",
       "priceCents": 299,
       "inventory_count": 90,
-      "imageUrl": "/images/energy-330ml.jpg",
-      "id": "c676"
+      "imageUrl": "/images/energy-330ml.jpg"
     },
     {
       "productId": "SKU-020",
@@ -233,8 +218,7 @@
       "category": "Beverages",
       "priceCents": 149,
       "inventory_count": 200,
-      "imageUrl": "/images/water-600ml.jpg",
-      "id": "1ba9"
+      "imageUrl": "/images/water-600ml.jpg"
     },
     {
       "productId": "SKU-021",
@@ -243,8 +227,7 @@
       "category": "Frozen",
       "priceCents": 899,
       "inventory_count": 12,
-      "imageUrl": "/images/pizza-400g.jpg",
-      "id": "e0a5"
+      "imageUrl": "/images/pizza-400g.jpg"
     },
     {
       "productId": "SKU-022",
@@ -253,8 +236,7 @@
       "category": "Frozen",
       "priceCents": 699,
       "inventory_count": 10,
-      "imageUrl": "/images/icecream-1l.jpg",
-      "id": "ff64"
+      "imageUrl": "/images/icecream-1l.jpg"
     },
     {
       "productId": "SKU-023",
@@ -263,8 +245,7 @@
       "category": "Pantry",
       "priceCents": 299,
       "inventory_count": 45,
-      "imageUrl": "/images/pasta-500g.jpg",
-      "id": "32ce"
+      "imageUrl": "/images/pasta-500g.jpg"
     },
     {
       "productId": "SKU-024",
@@ -273,8 +254,16 @@
       "category": "Pantry",
       "priceCents": 499,
       "inventory_count": 36,
-      "imageUrl": "/images/pasta-sauce-500g.jpg",
-      "id": "4573"
+      "imageUrl": "/images/pasta-sauce-500g.jpg"
+    },
+    {
+      "id": "32d6",
+      "name": "Clothes Pegs 24pk",
+      "price": 6,
+      "inventory_count": 30,
+      "category": "Clothing",
+      "description": "Multi-coloured clothes pegs for washing and drying",
+      "productId": "SKU-025"
     }
   ],
   "orders": [],

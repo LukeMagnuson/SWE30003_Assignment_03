@@ -154,6 +154,57 @@ export default {
     }
   },
   methods: {
+    async claimNextSku() {
+      const base = 'http://localhost:3000';
+      const formatSku = (n) => `SKU-${String(n).padStart(3, '0')}`;
+      // Try to fetch string-id counter at /counters/product first
+      try {
+        let rec = null;
+        let res = await fetch(`${base}/counters/product`);
+        if (res.ok) {
+          rec = await res.json();
+        } else {
+          // Fallback to query style
+          res = await fetch(`${base}/counters?id=product`);
+          if (res.ok) {
+            const arr = await res.json();
+            rec = Array.isArray(arr) ? arr[0] : null;
+          }
+        }
+
+        if (rec && typeof rec.next === 'number') {
+          const current = rec.next;
+          const next = current + 1;
+          const sku = formatSku(current);
+          // Persist increment; support string id path or numeric if present
+          const recId = encodeURIComponent(rec.id ?? 'product');
+          await fetch(`${base}/counters/${recId}`,
+            { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ next }) });
+          return sku;
+        }
+      } catch (e) {
+        // ignore and fallback below
+        console.warn('SKU counter fetch failed, falling back to scan', e);
+      }
+
+      // Fallback: compute next from existing productIds without touching counter
+      try {
+        const res = await fetch(`${base}/products`);
+        const arr = res.ok ? await res.json() : [];
+        const nums = (arr || [])
+          .map(p => String(p.productId || ''))
+          .map(s => {
+            const m = /^SKU-(\d+)$/.exec(s);
+            return m ? parseInt(m[1], 10) : 0;
+          })
+          .filter(n => Number.isFinite(n));
+        const max = nums.length ? Math.max(...nums) : 0;
+        return formatSku(max + 1);
+      } catch {
+        // last resort
+        return formatSku(Date.now() % 1000);
+      }
+    },
     openDetails(p) {
       this.selectedProduct = p;
       this.showDetails = true;
@@ -314,10 +365,13 @@ export default {
     async onAddProduct(dto) {
       const apiUrl = 'http://localhost:3000/products';
       try {
-        const res = await fetch(apiUrl, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(dto) });
+        // Generate next SKU automatically
+        const sku = await this.claimNextSku();
+        const payload = { ...dto, productId: sku };
+        const res = await fetch(apiUrl, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
         if (!res.ok) throw new Error('Server returned ' + res.status);
         await this.loadCatalog();
-        this.message = `Added ${dto.productId || dto.name}`;
+        this.message = `Added ${sku || dto.name}`;
         // reset child form
         if (this.$refs && this.$refs.addForm && this.$refs.addForm.resetForm) this.$refs.addForm.resetForm();
       } catch (err) {
