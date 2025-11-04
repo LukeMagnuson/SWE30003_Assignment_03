@@ -7,7 +7,16 @@
 
     <!-- Product grid -->
     <ul class="product-list">
-      <li v-for="shopItem in paginatedShopItems" :key="shopItem.productId" class="product-item">
+      <li
+        v-for="shopItem in paginatedShopItems"
+        :key="shopItem.productId"
+        class="product-item clickable"
+        @click="openDetails(shopItem)"
+        role="button"
+        tabindex="0"
+        @keydown.enter="openDetails(shopItem)"
+        @keydown.space.prevent="openDetails(shopItem)"
+      >
         <img
           class="product-image"
           :src="computeImageSrc(shopItem)"
@@ -16,7 +25,7 @@
         />
         <div class="product-info">
           <div class="product-name">{{ shopItem.name }}</div>
-          <div class="product-desc">{{ shopItem.description }}</div>
+          <div class="product-desc truncate-1">{{ shopItem.description }}</div>
           <div class="product-meta">
             <span class="stock">Stock: <b>{{ shopItem.quantityAvailable }}</b></span>
             <span class="price">Price: ${{ (shopItem.priceCents / 100).toFixed(2) }}</span>
@@ -29,9 +38,10 @@
               :max="shopItem.quantityAvailable"
               :disabled="shopItem.quantityAvailable === 0"
               v-model.number="quantities[shopItem.productId]"
+              @click.stop
             />
             <button
-              @click="addToCart(shopItem)"
+              @click.stop="addToCart(shopItem)"
               :disabled="shopItem.quantityAvailable === 0"
             >
               {{ shopItem.quantityAvailable === 0 ? 'Out of stock' : 'Add to cart' }}
@@ -47,14 +57,19 @@
       Page {{ currentPage }} of {{ totalPages }}
       <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
     </div>
+
+    <!-- Product details overlay -->
+    <ProductDetailsModal v-model="showDetails" :product="selectedProduct" @close="closeDetails" />
   </div>
 </template>
 
 <script>
 import ProductCatalogue from '../models/ProductCatalogue';
 import cart from '../stores/cart';
+import ProductDetailsModal from './ProductDetailsModal.vue';
 
 export default {
+  components: { ProductDetailsModal },
   data() {
     return {
       catalogue: null,
@@ -63,6 +78,8 @@ export default {
       itemsPerPage: 8,
       placeholder: '/images/Supa_Team_4.jpg',
       quantities: {},
+      showDetails: false,
+      selectedProduct: null,
     };
   },
   computed: {
@@ -79,6 +96,14 @@ export default {
     }
   },
   methods: {
+    openDetails(product) {
+      this.selectedProduct = product;
+      this.showDetails = true;
+    },
+    closeDetails() {
+      this.showDetails = false;
+      this.selectedProduct = null;
+    },
     nextPage() { if (this.currentPage < this.totalPages) this.currentPage++; },
     prevPage() { if (this.currentPage > 1) this.currentPage--; },
 
@@ -256,11 +281,6 @@ export default {
   font-size: 0.9rem;
   color: #555;
   margin-bottom: 0.5rem;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
   flex: 1 1 auto; /* allow description to take available space */
 }
 .product-meta {
@@ -278,4 +298,5 @@ export default {
 .product-actions .qty { width: 64px; padding: 4px; }
 .pagination { margin-top: 1rem; display:flex; gap:1rem; align-items:center; }
 .admin-message { color: #064; margin-top: 0.5rem; }
+.clickable { cursor: pointer; }
 </style>

@@ -16,14 +16,23 @@
             <input v-model="searchTerm" placeholder="Search products..." class="search" />
 
             <ul class="product-list">
-              <li v-for="p in filteredProducts" :key="p.productId" class="product-item">
+              <li
+                v-for="p in filteredProducts"
+                :key="p.productId"
+                class="product-item clickable"
+                @click="openDetails(p)"
+                role="button"
+                tabindex="0"
+                @keydown.enter="openDetails(p)"
+                @keydown.space.prevent="openDetails(p)"
+              >
                 <img :src="computeImageSrc(p)" :alt="p.name || ''" @error="onImgError($event)" />
               <div class="meta">
                   <div class="name">{{ p.name }} <small>({{ p.productId }})</small></div>
-                  <div class="desc">{{ p.description }}</div>
+                  <div class="desc truncate-1">{{ p.description }}</div>
                   <div class="info">Stock: {{ p.quantityAvailable }} — ${{ (p.priceCents/100).toFixed(2) }}</div>
                 <div class="actions">
-                  <button @click="removeProduct(p)">Remove</button>
+                  <button @click.stop="removeProduct(p)">Remove</button>
                 </div>
               </div>
             </li>
@@ -58,16 +67,20 @@
         <div v-if="filteredUsers.length === 0" class="empty">No users found.</div>
       </div>
     </details>
+
+    <!-- Product details overlay -->
+    <ProductDetailsModal v-model="showDetails" :product="selectedProduct" @close="closeDetails" />
   </div>
 </template>
 
 <script>
 import ProductCatalogue from '../models/ProductCatalogue';
 import AddProductForm from './AddProductForm.vue';
+import ProductDetailsModal from './ProductDetailsModal.vue';
 
 export default {
   name: 'AdminDashboard',
-  components: { AddProductForm },
+  components: { AddProductForm, ProductDetailsModal },
   data() {
     return {
       catalogue: null,
@@ -79,7 +92,10 @@ export default {
       userSearchTerm: '',
       userMessage: '',
       // form state moved to AddProductForm component
-      placeholder: '/images/Supa_Team_4.jpg'
+      placeholder: '/images/Supa_Team_4.jpg',
+      // modal state
+      showDetails: false,
+      selectedProduct: null
     };
   },
   computed: {
@@ -102,6 +118,14 @@ export default {
     }
   },
   methods: {
+    openDetails(p) {
+      this.selectedProduct = p;
+      this.showDetails = true;
+    },
+    closeDetails() {
+      this.showDetails = false;
+      this.selectedProduct = null;
+    },
     async loadCatalog() {
       try {
         const apiUrl = 'http://localhost:3000/products';
@@ -273,4 +297,5 @@ export default {
 .user-list { list-style:none; padding:0; display:grid; gap:0.6rem; grid-template-columns: repeat(auto-fill,minmax(420px,1fr)); }
 .user-item { display:flex; gap:0.6rem; padding:0.6rem; border:1px solid #eee; border-radius:6px; background:#fff; }
 .empty { color:#777; font-style:italic; }
+.clickable { cursor: pointer; }
 </style>

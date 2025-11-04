@@ -234,3 +234,10 @@ button.danger {
 
 /* Small accessibility improvements */
 a, button { -webkit-tap-highlight-color: rgba(0,0,0,0); }
+
+/* Truncation helper */
+.truncate-1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
