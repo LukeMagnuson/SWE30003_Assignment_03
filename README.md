@@ -19,6 +19,8 @@ In the terminal, run this set of commands.
  1. npm install
  2. json-server --watch db.json
  3. npm run dev
+
+Step 6:
 Ctrl-click the "http://localhost." link to view the website.
 
 User Activities -
