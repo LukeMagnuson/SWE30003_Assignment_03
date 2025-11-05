@@ -28,10 +28,11 @@ User Activities -
 Browsing:
  1. Click on the shop tab in the header to browse the available products in the catalogue.
 
-Logging In:
- 1. Go to either Login or Profile (if logged out)
- 2. To perform Admin actions, register as an Admin account, then log in with the details you provided. Otherwise, do so with a customer account.
- 3. Details will be saved as plaintext to json db for demo purposes, and you can now view your profile, details, and orders on the profile page.
+Registering and Logging In:
+ 1. Go to either Login or Profile tab (if logged out)
+ 2. If there's no existing account, register a customer account to save contact and shipping details.
+ 3. To perform Admin actions, register as an Admin account, then log in with the details you provided. Otherwise, do so with a customer account.
+ 4. Details will be saved as plaintext to json db for demo purposes, and you can now view your profile, details, and orders on the profile page.
 
 Shopping:
  1. After logging in (or as a guest), go to the Shop tab and browse. You can add the items you want to the cart, either one at a time or in quantity.
