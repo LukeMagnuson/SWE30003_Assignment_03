@@ -16,8 +16,12 @@ Change directory via CMD into Assignment_03.
 
 Step 5:
 In the terminal, run this set of commands.
+
+Terminal 1:
  1. npm install
  2. json-server --watch db.json
+
+Terminal 2:
  3. npm run dev
 
 Step 6:
