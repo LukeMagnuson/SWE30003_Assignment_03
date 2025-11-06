@@ -23,12 +23,22 @@
       "createdAt": "2025-11-03T21:07:15.075Z",
       "deliveryAddress": "123 Main St",
       "password": "password"
+    },
+    {
+      "id": "cust-2",
+      "name": "John",
+      "email": "john@email.com",
+      "phone": "0499999999",
+      "role": "Customer",
+      "createdAt": "2025-11-06T12:57:43.605Z",
+      "deliveryAddress": "456 Road",
+      "password": "password"
     }
   ],
   "counters": [
     {
       "id": "customer",
-      "next": 2
+      "next": 3
     },
     {
       "id": "admin",

@@ -103,6 +103,37 @@ export default {
     }
   },
   methods: {
+    async fetchAccountByEmail(email) {
+      const e = String(email || '').trim().toLowerCase();
+      if (!e) return null;
+      const base = 'http://localhost:3000';
+      try {
+        const [cRes, aRes] = await Promise.all([
+          fetch(`${base}/customers?email=${encodeURIComponent(e)}`),
+          fetch(`${base}/admins?email=${encodeURIComponent(e)}`)
+        ]);
+        const [cArr, aArr] = await Promise.all([
+          cRes.ok ? cRes.json() : [],
+          aRes.ok ? aRes.json() : []
+        ]);
+        const norm = (u, role) => ({
+          id: u.id,
+          name: u.name,
+          email: (u.email || '').toLowerCase(),
+          phone: u.phone,
+          role,
+          deliveryAddress: u.deliveryAddress,
+          permissions: Array.isArray(u.permissions) ? u.permissions : [],
+          password: u.password
+        });
+        if (Array.isArray(aArr) && aArr.length > 0) return norm(aArr[0], 'Admin');
+        if (Array.isArray(cArr) && cArr.length > 0) return norm(cArr[0], 'Customer');
+        return null;
+      } catch (e) {
+        // Surface an error up so the UI can inform the user the API isn't running
+        throw new Error('Unable to reach the database API at http://localhost:3000. Please start it with "npm run serve:api".');
+      }
+    },
     async isEmailRegisteredInDb(email) {
       const e = String(email || '').trim().toLowerCase();
       if (!e) return false;
@@ -125,12 +156,37 @@ export default {
     async doLogin() {
       try {
         this.message = '';
-        // AuthenticationService.login returns a token string or throws
+        const email = String(this.email || '').trim().toLowerCase();
+
+        // 1) Fetch the authoritative account from the database (json-server)
+        const account = await this.fetchAccountByEmail(email);
+        if (!account) {
+          this.message = 'Account not found in the database.';
+          return;
+        }
+
+        // 2) Ensure AuthenticationService knows about this account (seed into memory)
+        const type = account.role === 'Admin' ? 'admin' : 'customer';
+        try {
+          auth.registerUser(
+            type,
+            account.id,
+            account.name,
+            account.email,
+            account.password,
+            type === 'admin'
+              ? { phone: account.phone, permissions: account.permissions }
+              : { phone: account.phone, deliveryAddress: account.deliveryAddress }
+          );
+        } catch (e) {
+          // If it's already present in-memory, ignore duplicate error
+          if (!/Email already registered/i.test(e?.message || '')) throw e;
+        }
+
+        // 3) Proceed with normal login using the in-memory service
         const token = auth.login(this.email, this.password);
-        // store token
         localStorage.setItem(STORAGE_KEY, token);
         this.token = token;
-        // validate and retrieve user object
         const user = auth.validateSession(token);
         this.currentUser = user;
         this.message = `Welcome, ${user.name}`;
