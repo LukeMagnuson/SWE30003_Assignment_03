@@ -3,9 +3,6 @@
  * - simple in-memory user store (for demo)
  * - factory method for creating Customer or Admin
  * - session token management with expiry
- *
- * NOTE: This is a demo implementation intended for development / assignment use only.
- * Do NOT use this for production authentication.
  */
 
 import { User } from './User';

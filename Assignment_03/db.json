@@ -11,6 +11,18 @@
         "catalog:write"
       ],
       "password": "password"
+    },
+    {
+      "id": "admin-2",
+      "name": "Kerry Admin",
+      "email": "kerryadmin@email.com",
+      "phone": "0466554488",
+      "role": "Admin",
+      "createdAt": "2025-11-06T17:36:39.207Z",
+      "permissions": [
+        "catalog:write"
+      ],
+      "password": "kerrypass"
     }
   ],
   "customers": [
@@ -33,20 +45,30 @@
       "createdAt": "2025-11-06T12:57:43.605Z",
       "deliveryAddress": "456 Road",
       "password": "password"
+    },
+    {
+      "id": "cust-3",
+      "name": "James Customer",
+      "email": "james@email.com",
+      "phone": "0455555555",
+      "role": "Customer",
+      "createdAt": "2025-11-06T16:52:24.753Z",
+      "deliveryAddress": "616 Muller Avenue",
+      "password": "newpassword"
     }
   ],
   "counters": [
     {
       "id": "customer",
-      "next": 3
+      "next": 4
     },
     {
       "id": "admin",
-      "next": 2
+      "next": 3
     },
     {
       "id": "product",
-      "next": 26
+      "next": 28
     }
   ],
   "products": [
@@ -57,7 +79,7 @@
       "description": "Full cream Australian milk, 1 litre carton.",
       "category": "Dairy",
       "priceCents": 249,
-      "inventory_count": 48,
+      "inventory_count": 46,
       "imageUrl": "/images/milk-1l.jpg"
     },
     {
@@ -107,7 +129,7 @@
       "description": "Creamy unsalted butter, 250g block.",
       "category": "Dairy",
       "priceCents": 549,
-      "inventory_count": 18,
+      "inventory_count": 17,
       "imageUrl": "/images/butter-250g.jpg"
     },
     {
@@ -137,7 +159,7 @@
       "description": "Milk chocolate bar, 50g.",
       "category": "Confectionery",
       "priceCents": 199,
-      "inventory_count": 120,
+      "inventory_count": 119,
       "imageUrl": "/images/choc-50g.jpg"
     },
     {
@@ -167,7 +189,7 @@
       "description": "Natural yogurt pot, 150g.",
       "category": "Dairy",
       "priceCents": 149,
-      "inventory_count": 80,
+      "inventory_count": 79,
       "imageUrl": "/images/yoghurt-150g.jpg"
     },
     {
@@ -177,7 +199,7 @@
       "description": "Fresh bananas sold per kilogram.",
       "category": "Produce",
       "priceCents": 399,
-      "inventory_count": 35,
+      "inventory_count": 32,
       "imageUrl": "/images/bananas-kg.jpg"
     },
     {
@@ -237,7 +259,7 @@
       "description": "Caffeinated energy drink, 330mL can.",
       "category": "Beverages",
       "priceCents": 299,
-      "inventory_count": 90,
+      "inventory_count": 87,
       "imageUrl": "/images/energy-330ml.jpg"
     },
     {
@@ -257,18 +279,8 @@
       "description": "Stone-baked style frozen pizza, 400g.",
       "category": "Frozen",
       "priceCents": 899,
-      "inventory_count": 12,
+      "inventory_count": 11,
       "imageUrl": "/images/pizza-400g.jpg"
-    },
-    {
-      "productId": "SKU-022",
-      "id": "SKU-022",
-      "name": "Ice Cream Tub 1L",
-      "description": "Vanilla ice cream tub, 1 litre.",
-      "category": "Frozen",
-      "priceCents": 699,
-      "inventory_count": 10,
-      "imageUrl": "/images/icecream-1l.jpg"
     },
     {
       "productId": "SKU-023",
@@ -298,9 +310,191 @@
       "category": "Technology",
       "description": "Prepaid SIM card with 20GB with calls and text.",
       "productId": "SKU-025"
+    },
+    {
+      "id": "SKU-026",
+      "name": "Strawberry Jam",
+      "price": 4.5,
+      "inventory_count": 30,
+      "category": "Confectionary",
+      "description": "Spreadable strawberry jam, 340g.",
+      "productId": "SKU-026"
+    },
+    {
+      "id": "SKU-027",
+      "name": "Garden Hose",
+      "price": 16,
+      "inventory_count": 15,
+      "category": "Garden and Homeware",
+      "description": "Exterior garden hose, 5 metres.",
+      "productId": "SKU-027"
     }
   ],
-  "orders": [],
-  "invoices": [],
-  "payments": []
+  "orders": [
+    {
+      "id": "e5ee",
+      "orderId": "ord-mhnodx36-7k2qw",
+      "customerId": "cust-3",
+      "status": "Paid",
+      "createdAt": "2025-11-06T17:03:12.066Z",
+      "items": [
+        {
+          "productId": "SKU-001",
+          "name": "Fresh Milk 1L",
+          "unitPriceCents": 249,
+          "quantity": 2,
+          "lineTotalCents": 498
+        },
+        {
+          "productId": "SKU-009",
+          "name": "Chocolate Bar 50g",
+          "unitPriceCents": 199,
+          "quantity": 1,
+          "lineTotalCents": 199
+        },
+        {
+          "productId": "SKU-006",
+          "name": "Unsalted Butter 250g",
+          "unitPriceCents": 549,
+          "quantity": 1,
+          "lineTotalCents": 549
+        },
+        {
+          "productId": "SKU-013",
+          "name": "Bananas (per kg)",
+          "unitPriceCents": 399,
+          "quantity": 3,
+          "lineTotalCents": 1197
+        },
+        {
+          "productId": "SKU-019",
+          "name": "Energy Drink 330mL",
+          "unitPriceCents": 299,
+          "quantity": 3,
+          "lineTotalCents": 897
+        },
+        {
+          "productId": "SKU-021",
+          "name": "Frozen Pizza 400g",
+          "unitPriceCents": 899,
+          "quantity": 1,
+          "lineTotalCents": 899
+        },
+        {
+          "productId": "SKU-022",
+          "name": "Ice Cream Tub 1L",
+          "unitPriceCents": 699,
+          "quantity": 10,
+          "lineTotalCents": 6990
+        },
+        {
+          "productId": "SKU-012",
+          "name": "Yoghurt Natural 150g",
+          "unitPriceCents": 149,
+          "quantity": 1,
+          "lineTotalCents": 149
+        }
+      ],
+      "subtotalCents": 11378,
+      "gstCents": 1138,
+      "totalCents": 12516,
+      "customerContact": {
+        "name": "James Customer",
+        "email": "james@email.com",
+        "phone": "0412345678",
+        "deliveryAddress": "443 Coyote Drive"
+      },
+      "paidAt": "2025-11-06T17:09:47.208Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "d022",
+      "invoiceId": "inv-mhnodx36-t1r",
+      "orderId": "ord-mhnodx36-7k2qw",
+      "billingName": "James Customer",
+      "billingAddress": "443 Coyote Drive",
+      "issuedAt": "2025-11-06T17:03:12.066Z",
+      "lines": [
+        {
+          "productId": "SKU-001",
+          "name": "Fresh Milk 1L",
+          "unitPriceCents": 249,
+          "quantity": 2,
+          "lineTotalCents": 498,
+          "lineGstCents": 50
+        },
+        {
+          "productId": "SKU-009",
+          "name": "Chocolate Bar 50g",
+          "unitPriceCents": 199,
+          "quantity": 1,
+          "lineTotalCents": 199,
+          "lineGstCents": 20
+        },
+        {
+          "productId": "SKU-006",
+          "name": "Unsalted Butter 250g",
+          "unitPriceCents": 549,
+          "quantity": 1,
+          "lineTotalCents": 549,
+          "lineGstCents": 55
+        },
+        {
+          "productId": "SKU-013",
+          "name": "Bananas (per kg)",
+          "unitPriceCents": 399,
+          "quantity": 3,
+          "lineTotalCents": 1197,
+          "lineGstCents": 120
+        },
+        {
+          "productId": "SKU-019",
+          "name": "Energy Drink 330mL",
+          "unitPriceCents": 299,
+          "quantity": 3,
+          "lineTotalCents": 897,
+          "lineGstCents": 90
+        },
+        {
+          "productId": "SKU-021",
+          "name": "Frozen Pizza 400g",
+          "unitPriceCents": 899,
+          "quantity": 1,
+          "lineTotalCents": 899,
+          "lineGstCents": 90
+        },
+        {
+          "productId": "SKU-022",
+          "name": "Ice Cream Tub 1L",
+          "unitPriceCents": 699,
+          "quantity": 10,
+          "lineTotalCents": 6990,
+          "lineGstCents": 699
+        },
+        {
+          "productId": "SKU-012",
+          "name": "Yoghurt Natural 150g",
+          "unitPriceCents": 149,
+          "quantity": 1,
+          "lineTotalCents": 149,
+          "lineGstCents": 15
+        }
+      ],
+      "subtotalCents": 11378,
+      "gstCents": 1139,
+      "totalCents": 12517
+    }
+  ],
+  "payments": [
+    {
+      "id": "7ad5",
+      "paymentId": "pay-mhnodx36-l23",
+      "orderId": "ord-mhnodx36-7k2qw",
+      "method": "Card",
+      "amountCents": 12516,
+      "status": "Completed",
+      "processedAt": "2025-11-06T17:09:47.208Z"
+    }
+  ]
 }
