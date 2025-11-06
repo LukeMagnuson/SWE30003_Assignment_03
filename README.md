@@ -34,6 +34,13 @@ Registering and Logging In:
  3. To perform Admin actions, register as an Admin account, then log in with the details you provided. Otherwise, do so with a customer account.
  4. Details will be saved as plaintext to json db for demo purposes, and you can now view your profile, details, and orders on the profile page.
 
+Updating Your Profile:
+ 1. Ensure the local database API is running (see Step 5.2: `json-server --watch db.json`).
+ 2. Open the Profile page while logged in.
+ 3. In "Update contact details", edit your phone and, for customers, your delivery address, then click Save changes.
+ 4. In "Change password", enter your current password, a new password (min 6 chars), and confirm it, then click Update password.
+ 5. Changes are written to the json-server database and reflected in your session immediately.
+
 Shopping:
  1. After logging in (or as a guest), go to the Shop tab and browse. You can add the items you want to the cart, either one at a time or in quantity.
  2. Once you've chosen your items, go the the Cart page, and finalise your order to go the Checkout.

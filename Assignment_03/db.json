@@ -18,11 +18,11 @@
       "id": "cust-1",
       "name": "Test Customer",
       "email": "testcustomer@email.com",
-      "phone": "0412345678",
+      "phone": "0498765432",
       "role": "Customer",
       "createdAt": "2025-11-03T21:07:15.075Z",
       "deliveryAddress": "123 Main St",
-      "password": "password"
+      "password": "password1"
     },
     {
       "id": "cust-2",

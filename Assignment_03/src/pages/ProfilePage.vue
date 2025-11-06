@@ -30,6 +30,48 @@
         </li>
       </ul>
 
+      <details class="profile-edit" open>
+        <summary>Update contact details</summary>
+        <form class="form-grid" @submit.prevent="updateContact">
+          <label>
+            Phone
+            <input type="tel" v-model="contactPhone" placeholder="e.g. 0412345678" />
+          </label>
+          <label v-if="isCustomer">
+            Delivery address
+            <input type="text" v-model="contactAddress" placeholder="e.g. 123 Main St" />
+          </label>
+          <div class="actions">
+            <button type="submit" :disabled="savingContact">{{ savingContact ? 'Saving…' : 'Save changes' }}</button>
+            <span class="msg ok" v-if="contactMsg">{{ contactMsg }}</span>
+            <span class="msg err" v-if="contactErr">{{ contactErr }}</span>
+          </div>
+        </form>
+      </details>
+
+      <details class="password-edit">
+        <summary>Change password</summary>
+        <form class="form-grid" @submit.prevent="changePasswordSubmit">
+          <label>
+            Current password
+            <input type="password" v-model="pwCurrent" autocomplete="current-password" required />
+          </label>
+          <label>
+            New password
+            <input type="password" v-model="pwNew" autocomplete="new-password" minlength="6" required />
+          </label>
+          <label>
+            Confirm new password
+            <input type="password" v-model="pwConfirm" autocomplete="new-password" minlength="6" required />
+          </label>
+          <div class="actions">
+            <button type="submit" :disabled="changingPw">{{ changingPw ? 'Updating…' : 'Update password' }}</button>
+            <span class="msg ok" v-if="pwMsg">{{ pwMsg }}</span>
+            <span class="msg err" v-if="pwErr">{{ pwErr }}</span>
+          </div>
+        </form>
+      </details>
+
       <details class="orders" open>
         <summary>Orders</summary>
         <div v-if="ordersLoading" class="loading">Loading orders…</div>
@@ -71,7 +113,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import auth from '../models/AuthenticationService';
 import { Customer } from '../models/Customer';
@@ -213,6 +255,7 @@ onMounted(() => {
       role: u.getRole ? u.getRole() : ''
     };
     jsUser.value = base;
+    initContactFields();
   } catch (e) {
     // token invalid -> route to login
     router.replace({ path: '/login', query: { unauthorised: 'true' } }).catch(() => {});
@@ -222,6 +265,91 @@ onMounted(() => {
     if (domainUser.value) loadOrders();
   }
 });
+
+// ---------- Profile editing state ----------
+const contactPhone = ref('');
+const contactAddress = ref('');
+const savingContact = ref(false);
+const contactMsg = ref('');
+const contactErr = ref('');
+
+function initContactFields() {
+  const u = domainUser.value;
+  if (!u) return;
+  contactPhone.value = u.phone || '';
+  if (u instanceof Customer) contactAddress.value = u.deliveryAddress || '';
+}
+
+watch(domainUser, () => initContactFields());
+
+async function updateContact() {
+  if (!domainUser.value) return;
+  contactMsg.value = '';
+  contactErr.value = '';
+  savingContact.value = true;
+  const base = 'http://localhost:3000';
+  const uid = domainUser.value.userId;
+  const isCust = domainUser.value instanceof Customer;
+  const endpoint = `${base}/${isCust ? 'customers' : 'admins'}/${encodeURIComponent(uid)}`;
+  const payload = isCust
+    ? { phone: contactPhone.value || undefined, deliveryAddress: contactAddress.value || undefined }
+    : { phone: contactPhone.value || undefined };
+  try {
+    const res = await fetch(endpoint, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (!res.ok) throw new Error(`Failed to update ${isCust ? 'customer' : 'admin'} profile`);
+    // Update in-memory auth state and local UI snapshot
+    try { auth.updateUserProfile(uid, payload); } catch { /* ignore */ }
+    // reflect in displayed objects
+    domainUser.value.phone = payload.phone;
+    if (isCust) domainUser.value.deliveryAddress = payload.deliveryAddress;
+    jsUser.value = domainUser.value.toJSON ? domainUser.value.toJSON() : { ...jsUser.value, ...payload };
+    contactMsg.value = 'Saved';
+  } catch (e) {
+    contactErr.value = e?.message || 'Update failed';
+  } finally {
+    savingContact.value = false;
+  }
+}
+
+// ---------- Password change state ----------
+const pwCurrent = ref('');
+const pwNew = ref('');
+const pwConfirm = ref('');
+const changingPw = ref(false);
+const pwMsg = ref('');
+const pwErr = ref('');
+
+async function changePasswordSubmit() {
+  if (!domainUser.value) return;
+  pwMsg.value = '';
+  pwErr.value = '';
+  if (pwNew.value.length < 6) { pwErr.value = 'New password must be at least 6 characters'; return; }
+  if (pwNew.value !== pwConfirm.value) { pwErr.value = 'New passwords do not match'; return; }
+  changingPw.value = true;
+  const uid = domainUser.value.userId;
+  const base = 'http://localhost:3000';
+  const isCust = domainUser.value instanceof Customer;
+  const endpoint = `${base}/${isCust ? 'customers' : 'admins'}/${encodeURIComponent(uid)}`;
+  try {
+    // Update in-memory (validates current password)
+    auth.changePassword(uid, pwCurrent.value, pwNew.value);
+    // Persist to db.json
+    const res = await fetch(endpoint, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pwNew.value }) });
+    if (!res.ok) throw new Error('Failed to update password in database');
+    pwMsg.value = 'Password updated';
+    pwCurrent.value = '';
+    pwNew.value = '';
+    pwConfirm.value = '';
+  } catch (e) {
+    // Best-effort rollback of in-memory change if DB write failed
+    if (/Failed to update password/.test(String(e?.message || ''))) {
+      try { auth.changePassword(uid, pwNew.value, pwCurrent.value); } catch { /* ignore */ }
+    }
+    pwErr.value = e?.message || 'Password update failed';
+  } finally {
+    changingPw.value = false;
+  }
+}
 </script>
 
 <style scoped>
@@ -246,4 +374,13 @@ onMounted(() => {
 .badge.st-paid { background: #ecfdf5; color: #065f46; }
 .muted { color: #6b7280; }
 .empty { color: #6b7280; }
+
+/* Profile edit forms */
+.profile-edit, .password-edit { margin-top: 1rem; }
+.form-grid { display: grid; gap: 0.5rem; max-width: 520px; }
+.form-grid label { display: grid; gap: 0.25rem; }
+.form-grid input { padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px; }
+.actions { display: flex; align-items: center; gap: 0.5rem; }
+.msg.ok { color: #065f46; }
+.msg.err { color: #991b1b; }
 </style>

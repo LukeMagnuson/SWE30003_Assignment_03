@@ -130,6 +130,24 @@ export class AuthenticationService {
     try { this.saveState(); } catch { }
   }
 
+  // Update basic profile fields for a user and persist to localStorage state
+  // Supported updates: name, phone (both roles) and deliveryAddress (Customer only)
+  updateUserProfile(userId: string, updates: { name?: string; phone?: string; deliveryAddress?: string }): void {
+    const rec = this.usersById.get(userId);
+    if (!rec) throw new Error('User not found');
+    const user = rec.user;
+    if (typeof updates.name !== 'undefined') {
+      try { user.name = updates.name as string; } catch { /* ignore invalid name */ }
+    }
+    if (typeof updates.phone !== 'undefined') {
+      try { user.phone = updates.phone; } catch { /* ignore */ }
+    }
+    if (typeof updates.deliveryAddress !== 'undefined' && user instanceof Customer) {
+      try { (user as Customer).deliveryAddress = updates.deliveryAddress; } catch { /* ignore */ }
+    }
+    try { this.saveState(); } catch { }
+  }
+
   // permission check: returns true if user has permission
   checkPermission(userId: string, permission: string): boolean {
     const rec = this.usersById.get(userId);
