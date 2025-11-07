@@ -77,11 +77,11 @@ export class AuthenticationService {
   login(email: string, password: string): string {
     const normalizedEmail = email.trim().toLowerCase();
     const userId = this.usersByEmail.get(normalizedEmail);
-    if (!userId) throw new InvalidCredentialsError('Invalid email or password');
+    if (!userId) throw new InvalidCredentialsError("That email and password combination doesn't exist.");
 
     const record = this.usersById.get(userId)!;
     const pwHash = this.hashPassword(password);
-    if (record.passwordHash !== pwHash) throw new InvalidCredentialsError('Invalid email or password');
+    if (record.passwordHash !== pwHash) throw new InvalidCredentialsError("That email and password combination doesn't exist.");
 
     // create token (simple random string)
     const token = this.createToken();
