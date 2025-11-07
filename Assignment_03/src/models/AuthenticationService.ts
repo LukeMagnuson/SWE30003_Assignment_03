@@ -58,7 +58,7 @@ export class AuthenticationService {
 
     let user: User;
     if (type === 'admin') {
-      const admin = new Admin(userId, { name, email, phone: opts?.phone }, opts?.permissions);
+      const admin = new Admin(userId, { name, email, phone: opts?.phone });
       user = admin;
     } else {
       const customer = new Customer(userId, { name, email, phone: opts?.phone }, { deliveryAddress: opts?.deliveryAddress });
@@ -145,15 +145,6 @@ export class AuthenticationService {
     try { this.saveState(); } catch { }
   }
 
-  // permission check: returns true if user has permission
-  checkPermission(userId: string, permission: string): boolean {
-    const rec = this.usersById.get(userId);
-    if (!rec) return false;
-    const user = rec.user;
-    if (user instanceof Admin) return user.hasPermission(permission);
-    // customers have no admin permissions by default
-    return false;
-  }
 
   // Retrieve user by id
   getUserById(userId: string): User | undefined {
@@ -208,8 +199,8 @@ export class AuthenticationService {
         const role = ujson.role || 'Customer';
         let user: User;
         if (role === 'Admin') {
-          // Admin expects (userId, contact, initialPermissions)
-          user = new Admin(userId, { name: ujson.name || 'Admin', email: ujson.email || '' , phone: ujson.phone }, ujson.permissions || []);
+          // Admin expects (userId, contact)
+          user = new Admin(userId, { name: ujson.name || 'Admin', email: ujson.email || '' , phone: ujson.phone });
           // restore lastAction if present
           if (ujson.lastAction && (user as Admin).recordAction) {
             try { (user as Admin).recordAction(ujson.lastAction); } catch { }

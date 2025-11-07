@@ -123,7 +123,6 @@ export default {
           phone: u.phone,
           role,
           deliveryAddress: u.deliveryAddress,
-          permissions: Array.isArray(u.permissions) ? u.permissions : [],
           password: u.password
         });
         if (Array.isArray(aArr) && aArr.length > 0) return norm(aArr[0], 'Admin');
@@ -175,7 +174,7 @@ export default {
             account.email,
             account.password,
             type === 'admin'
-              ? { phone: account.phone, permissions: account.permissions }
+              ? { phone: account.phone }
               : { phone: account.phone, deliveryAddress: account.deliveryAddress }
           );
         } catch (e) {
@@ -256,7 +255,7 @@ export default {
             this.reg.email,
             this.reg.password,
             type === 'admin'
-              ? { phone: this.reg.phone, permissions: ['catalog:write'] }
+              ? { phone: this.reg.phone }
               : { phone: this.reg.phone, deliveryAddress: this.reg.deliveryAddress }
           );
         } catch (err) {
@@ -284,7 +283,7 @@ export default {
           role: type === 'admin' ? 'Admin' : 'Customer',
           createdAt: createdAtISO,
           ...(type === 'admin'
-            ? { permissions: ['catalog:write'] }
+            ? {}
             : { deliveryAddress: this.reg.deliveryAddress || undefined }),
           // Store password as provided (demo only)
           password: this.reg.password

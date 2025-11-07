@@ -20,14 +20,8 @@
         <li><span>Created</span><span>{{ createdAtFormatted }}</span></li>
         <li v-if="isCustomer && customer.deliveryAddress"><span>Delivery Address</span><span>{{ customer.deliveryAddress }}</span></li>
         <li v-if="isCustomer && customer.cartId"><span>Cart ID</span><span>{{ customer.cartId }}</span></li>
-        <li v-if="isCustomer"><span>Order History Count</span><span>{{ orderHistoryCount }}</span></li>
         <li v-if="isAdmin && admin.lastAction"><span>Last Admin Action</span><span>{{ admin.lastAction }}</span></li>
-        <li v-if="isAdmin && permissions && permissions.length">
-          <span>Permissions</span>
-          <span>
-            <code class="perms">{{ permissions.join(', ') }}</code>
-          </span>
-        </li>
+        
       </ul>
 
       <details class="profile-edit" open>
@@ -142,14 +136,6 @@ const createdAtFormatted = computed(() => {
   return isNaN(d.getTime()) ? '' : d.toLocaleString();
 });
 
-const permissions = computed(() => {
-  // Admin has no public getter for permissions; use toJSON as a safe snapshot
-  if (!domainUser.value || !(domainUser.value instanceof Admin)) return [];
-  try {
-    const json = domainUser.value.toJSON ? domainUser.value.toJSON() : {};
-    return Array.isArray(json.permissions) ? json.permissions : [];
-  } catch { return []; }
-});
 
 const orderHistoryCount = computed(() => {
   if (!(domainUser.value instanceof Customer)) return 0;
@@ -359,7 +345,7 @@ async function changePasswordSubmit() {
 .kv li { display: grid; grid-template-columns: 200px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #eee; }
 .kv li span:first-child { color: #666; }
 .raw { margin-top: 1rem; }
-.perms { background: #f8fafc; padding: 2px 4px; border: 1px solid #e5e7eb; border-radius: 4px; }
+
 
 .orders { margin-top: 1rem; }
 .order-list { list-style: none; padding: 0; display: grid; gap: 0.6rem; }

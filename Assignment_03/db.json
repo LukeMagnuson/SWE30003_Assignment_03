@@ -7,9 +7,6 @@
       "phone": "0411111111",
       "role": "Admin",
       "createdAt": "2025-11-03T21:07:45.793Z",
-      "permissions": [
-        "catalog:write"
-      ],
       "password": "password"
     },
     {
@@ -19,9 +16,6 @@
       "phone": "0466554488",
       "role": "Admin",
       "createdAt": "2025-11-06T17:36:39.207Z",
-      "permissions": [
-        "catalog:write"
-      ],
       "password": "kerrypass"
     }
   ],
@@ -199,7 +193,7 @@
       "description": "Fresh bananas sold per kilogram.",
       "category": "Produce",
       "priceCents": 399,
-      "inventory_count": 32,
+      "inventory_count": 28,
       "imageUrl": "/images/bananas-kg.jpg"
     },
     {
@@ -209,7 +203,7 @@
       "description": "Pack of 4 Gala apples.",
       "category": "Produce",
       "priceCents": 499,
-      "inventory_count": 28,
+      "inventory_count": 27,
       "imageUrl": "/images/apples-pack.jpg"
     },
     {
@@ -259,7 +253,7 @@
       "description": "Caffeinated energy drink, 330mL can.",
       "category": "Beverages",
       "priceCents": 299,
-      "inventory_count": 87,
+      "inventory_count": 82,
       "imageUrl": "/images/energy-330ml.jpg"
     },
     {
@@ -299,7 +293,7 @@
       "description": "Tomato and basil pasta sauce, 500g jar.",
       "category": "Pantry",
       "priceCents": 499,
-      "inventory_count": 36,
+      "inventory_count": 35,
       "imageUrl": "/images/pasta-sauce-500g.jpg"
     },
     {
@@ -315,7 +309,7 @@
       "id": "SKU-026",
       "name": "Strawberry Jam",
       "price": 4.5,
-      "inventory_count": 30,
+      "inventory_count": 29,
       "category": "Confectionary",
       "description": "Spreadable strawberry jam, 340g.",
       "productId": "SKU-026"
@@ -405,6 +399,60 @@
         "deliveryAddress": "443 Coyote Drive"
       },
       "paidAt": "2025-11-06T17:09:47.208Z"
+    },
+    {
+      "id": "d890",
+      "orderId": "ord-mhnzrw60-1jgkr",
+      "customerId": "cust-3",
+      "status": "Paid",
+      "createdAt": "2025-11-06T22:21:59.832Z",
+      "items": [
+        {
+          "productId": "SKU-013",
+          "name": "Bananas (per kg)",
+          "unitPriceCents": 399,
+          "quantity": 4,
+          "lineTotalCents": 1596
+        },
+        {
+          "productId": "SKU-014",
+          "name": "Gala Apples (pack)",
+          "unitPriceCents": 499,
+          "quantity": 1,
+          "lineTotalCents": 499
+        },
+        {
+          "productId": "SKU-024",
+          "name": "Pasta Sauce 500g",
+          "unitPriceCents": 499,
+          "quantity": 1,
+          "lineTotalCents": 499
+        },
+        {
+          "productId": "SKU-026",
+          "name": "Strawberry Jam",
+          "unitPriceCents": 450,
+          "quantity": 1,
+          "lineTotalCents": 450
+        },
+        {
+          "productId": "SKU-019",
+          "name": "Energy Drink 330mL",
+          "unitPriceCents": 299,
+          "quantity": 5,
+          "lineTotalCents": 1495
+        }
+      ],
+      "subtotalCents": 4539,
+      "gstCents": 454,
+      "totalCents": 4993,
+      "customerContact": {
+        "name": "James Customer",
+        "email": "james@email.com",
+        "phone": "0455555555",
+        "deliveryAddress": "616 Muller Avenue"
+      },
+      "paidAt": "2025-11-06T22:23:29.801Z"
     }
   ],
   "invoices": [
@@ -484,6 +532,59 @@
       "subtotalCents": 11378,
       "gstCents": 1139,
       "totalCents": 12517
+    },
+    {
+      "id": "135a",
+      "invoiceId": "inv-mhnzrw60-jl1",
+      "orderId": "ord-mhnzrw60-1jgkr",
+      "billingName": "James Customer",
+      "billingAddress": "616 Muller Avenue",
+      "issuedAt": "2025-11-06T22:21:59.832Z",
+      "lines": [
+        {
+          "productId": "SKU-013",
+          "name": "Bananas (per kg)",
+          "unitPriceCents": 399,
+          "quantity": 4,
+          "lineTotalCents": 1596,
+          "lineGstCents": 160
+        },
+        {
+          "productId": "SKU-014",
+          "name": "Gala Apples (pack)",
+          "unitPriceCents": 499,
+          "quantity": 1,
+          "lineTotalCents": 499,
+          "lineGstCents": 50
+        },
+        {
+          "productId": "SKU-024",
+          "name": "Pasta Sauce 500g",
+          "unitPriceCents": 499,
+          "quantity": 1,
+          "lineTotalCents": 499,
+          "lineGstCents": 50
+        },
+        {
+          "productId": "SKU-026",
+          "name": "Strawberry Jam",
+          "unitPriceCents": 450,
+          "quantity": 1,
+          "lineTotalCents": 450,
+          "lineGstCents": 45
+        },
+        {
+          "productId": "SKU-019",
+          "name": "Energy Drink 330mL",
+          "unitPriceCents": 299,
+          "quantity": 5,
+          "lineTotalCents": 1495,
+          "lineGstCents": 150
+        }
+      ],
+      "subtotalCents": 4539,
+      "gstCents": 455,
+      "totalCents": 4994
     }
   ],
   "payments": [
@@ -495,6 +596,15 @@
       "amountCents": 12516,
       "status": "Completed",
       "processedAt": "2025-11-06T17:09:47.208Z"
+    },
+    {
+      "id": "73fc",
+      "paymentId": "pay-mhnzrw60-zzu",
+      "orderId": "ord-mhnzrw60-1jgkr",
+      "method": "Card",
+      "amountCents": 4993,
+      "status": "Completed",
+      "processedAt": "2025-11-06T22:23:29.801Z"
     }
   ]
 }
