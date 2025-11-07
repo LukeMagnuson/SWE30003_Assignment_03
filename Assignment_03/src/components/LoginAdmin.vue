@@ -160,7 +160,7 @@ export default {
         // 1) Fetch the authoritative account from the database (json-server)
         const account = await this.fetchAccountByEmail(email);
         if (!account) {
-          this.message = 'Account not found in the database.';
+          this.message = "Account doesn't seem to exist.";
           return;
         }
 
